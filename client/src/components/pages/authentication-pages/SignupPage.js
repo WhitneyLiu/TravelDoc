@@ -6,7 +6,7 @@ import PasswordCheck from "./components/PasswordCheck";
 import SubmitButton from "./components/SubmitButton";
 import UserPool from "../../../UserPool";
 import { isValid } from "../../../helper/password";
-import { show } from "../../../redux/reducer/notificationReducer";
+import { showError, showSuccess } from "../../../redux/reducer/notificationReducer";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 
@@ -21,19 +21,13 @@ export default function SignupPage() {
     event.preventDefault();
     if (!isValid(password)) {
       dispatch(
-        show({
-          isError: true,
-          message: "Invalid password.",
-        })
+        showError("Invalid password.")
       );
       return;
     }
     if (password !== passwordConfirm) {
       dispatch(
-        show({
-          isError: true,
-          message: "Passwords do not match.",
-        })
+        showError("Passwords do not match.")
       );
       return;
     }
@@ -41,16 +35,12 @@ export default function SignupPage() {
     UserPool.signUp(email, password, [], null, (err, data) => {
       if (err) {
         dispatch(
-          show({
-            isError: true,
-            message: err.message,
-          })
+          showError(err.message)
         );
         console.error(err);
       } else {
         dispatch(
-          show({
-            isError: false,
+          showSuccess({
             title: "Registration Success",
             message: `Thank you. We have sent you email to ${email}. Please check the link in that message to activate your account.`,
           })
