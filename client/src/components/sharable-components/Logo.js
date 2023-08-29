@@ -13,7 +13,7 @@ export default function Logo(props) {
         d="M26.828 6.828a4 4 0 10-5.656-5.656l-19 19A3.987 3.987 0 015 19a3.98 3.98 0 012.827 1.172L10.657 23 26.828 6.828z"
         clipRule="evenodd"
       />
-      <text x="50" y="33" font-size="24" fontWeight="600" fill="#0F172A">TravelDoc</text>
+      <text x="50" y="33" fontSize="24" fontWeight="600" fill="#0F172A">TravelDoc</text>
     </svg>
   )
 }
