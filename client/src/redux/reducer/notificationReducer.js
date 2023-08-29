@@ -15,20 +15,29 @@ export const notificationReducer = createSlice({
         show: false,
       };
     },
-    show: (state, action) => {
-      const { isError, title, message } = action.payload;
+    showError: (state, action) => {
+      return {
+        ...state,
+        show: true,
+        isError: true,
+        title: 'Error!',
+        message: action.payload,
+      };
+    },
+    showSuccess: (state, action) => {
+      const { title, message } = action.payload;
 
       return {
         ...state,
         show: true,
-        isError,
-        title: isError ? 'Error!' : title,
+        isError: false,
+        title: title,
         message,
       };
     },
   },
 });
 
-export const { close, show } = notificationReducer.actions;
+export const { close, showError, showSuccess } = notificationReducer.actions;
 
 export default notificationReducer.reducer;

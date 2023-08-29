@@ -1,7 +1,7 @@
 import Pool from "../../UserPool";
 import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { show } from "./notificationReducer";
+import { showError } from "./notificationReducer";
 
 export const authenticateUser = createAsyncThunk(
   "authentication/authenticateUser",
@@ -23,8 +23,7 @@ export const authenticateUser = createAsyncThunk(
             resolve(data);
           },
           onFailure: (err) => {
-            const errorMessage = err.message || "An error occurred";
-            dispatch(show({ isError: true, message: errorMessage }));
+            dispatch(showError(err.message));
             email = "";
             reject(err);
           },
