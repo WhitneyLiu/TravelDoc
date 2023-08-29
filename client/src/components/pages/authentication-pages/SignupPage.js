@@ -84,14 +84,13 @@ export default function SignupPage() {
           type="password"
           label="Password:"
         />
-        <PasswordCheck password={password}/>
+        <PasswordCheck password={password} />
         <AuthInput
           value={passwordConfirm}
           onChange={(event) => setPasswordConfirm(event.target.value)}
           type="password"
           label="Confirm password:"
         />
-
         <SubmitButton text="Sign up" />
       </AuthFormContainer>
     </AuthContainer>

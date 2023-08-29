@@ -1,7 +1,7 @@
 import BackgroundImage from "../../../sharable-components/BackgroundImage";
 import Container from "../../../sharable-components/Container";
-import Notification from "../../../sharable-components/Notification";
 import Logo from "../../../sharable-components/Logo";
+import Notification from "../../../sharable-components/Notification";
 
 export default function AuthContainer(props) {
   const { title, children } = props;

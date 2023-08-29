@@ -1,29 +1,56 @@
 import Pool from "../../UserPool";
-import { AuthenticationDetails, CognitoUser, CognitoUserPool } from "amazon-cognito-identity-js";
-import { createSlice } from "@reduxjs/toolkit";
+import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { show } from "./notificationReducer";
 
-export const authenticationReducer = createSlice({
-  name: "authentication",
-  initialState: {
-    //session token, user email
-    // Example:
-    // value: 0,
-    user: {},
-  },
-  reducers: {
-    // example:
-    // increment: (state) => {
-    // },
-    // decrement: (state) => {
-    //   state.value -= 1
-    // },
-    // incrementByAmount: (state, action) => {
-    //   state.value += action.payload
-    // },
-    getSession: async (state) => {
-      return await new Promise((resolve, reject) => {
-        const user = Pool.getCurrentUser();
-        if (user) {
+export const authenticateUser = createAsyncThunk(
+  "authentication/authenticateUser",
+  async ({ email, password }, { dispatch }) => {
+    const user = new CognitoUser({
+      Username: email,
+      Pool,
+    });
+
+    const authDetails = new AuthenticationDetails({
+      Username: email,
+      Password: password,
+    });
+
+    try {
+      await new Promise((resolve, reject) => {
+        user.authenticateUser(authDetails, {
+          onSuccess: (data) => {
+            resolve(data);
+          },
+          onFailure: (err) => {
+            const errorMessage = err.message || "An error occurred";
+            dispatch(show({ isError: true, message: errorMessage }));
+            email = "";
+            reject(err);
+          },
+          newPasswordRequired: (data) => {
+            email = "";
+            resolve(data);
+          },
+        });
+      });
+      dispatch(getSession());
+
+      return email;
+    } catch (error) {
+      console.error("Authentication error:", error);
+      throw error;
+    }
+  }
+);
+
+export const getSession = createAsyncThunk(
+  "authentication/getSession",
+  async (_, { rejectWithValue }) => {
+    try {
+      const user = Pool.getCurrentUser();
+      if (user) {
+        return new Promise((resolve, reject) => {
           user.getSession(async (err, session) => {
             if (err) {
               reject(err);
@@ -37,8 +64,6 @@ export const authenticationReducer = createSlice({
                     for (let attribute of attributes) {
                       const { Name, Value } = attribute;
                       results[Name] = Value;
-                      console.log(Name);
-                      console.log(Value);
                     }
                     resolve(results);
                   }
@@ -47,59 +72,64 @@ export const authenticationReducer = createSlice({
               resolve({ user, ...session, ...attributes });
             }
           });
-        } else {
-          reject();
-        }
-      });
-    },
+        });
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
-    authenticate: async (state, action) => {
-      // input: Username, Password, setNotification
-      console.log(action.payload);
-      // return await new Promise((resolve, reject) => {
-      //   const user = new CognitoUser({
-      //     Username,
-      //     Pool,
-      //   });
-
-      //   const authDetails = new AuthenticationDetails({
-      //     Username,
-      //     Password,
-      //   });
-
-      //   user.authenticateUser(authDetails, {
-      //     onSuccess: (data) => {
-      //       resolve(data);
-      //     },
-      //     onFailure: (err) => {
-      //       setNotification({
-      //         show: true,
-      //         isError: true,
-      //         title: "Error!",
-      //         message: err.message,
-      //       });
-      //       reject(err);
-      //     },
-      //     newPasswordRequired: (data) => {
-      //       resolve(data);
-      //     },
-      //   });
-      // });
-    },
-
+export const authenticationReducer = createSlice({
+  name: "authentication",
+  initialState: {
+    email: "",
+    isLoading: false,
+    session: {},
+  },
+  reducers: {
     logout: (state) => {
       const user = Pool.getCurrentUser();
-      console.log(user);
       if (user) {
         user.signOut();
         console.log("logout success");
       }
+      return {
+        ...state,
+        email: "",
+        isLoading: false,
+        session: {},
+      };
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(authenticateUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(authenticateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.email = action.payload;
+      })
+      .addCase(authenticateUser.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(getSession.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getSession.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.session = action.payload;
+      })
+      .addCase(getSession.rejected, (state) => {
+        state.isLoading = false;
+        state.session = {};
+      });
   },
 });
 
-// Action creators are generated for each case reducer function
-// example:
-export const { getSession, authenticate, logout } = authenticationReducer.actions
+export const { logout } = authenticationReducer.actions;
 
 export default authenticationReducer.reducer;
