@@ -1,7 +1,10 @@
-import React from 'react'
-
+import React from "react";
+import Layout from "../../sharable-components/Layout";
 export default function SettingsPage() {
   return (
-    <div>This is the SettingsPage!</div>
-  )
+    <Layout>
+      {" "}
+      <div>This is the SettingsPage!</div>
+    </Layout>
+  );
 }

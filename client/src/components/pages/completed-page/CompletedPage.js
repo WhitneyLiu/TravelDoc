@@ -1,7 +1,9 @@
-import React from 'react'
-
+import React from "react";
+import Layout from "../../sharable-components/Layout";
 export default function CompletedPage() {
   return (
-    <div>This is the CompletedPage!</div>
-  )
+    <Layout>
+      <div>This is the CompletedPage!</div>
+    </Layout>
+  );
 }

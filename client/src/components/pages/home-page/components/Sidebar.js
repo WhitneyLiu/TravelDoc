@@ -23,7 +23,7 @@ function classNames(...classes) {
 export default function Sidebar({ profileImage }) {
   const userName = useSelector((state) => state.user.userName);
   return (
-    <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
+    <div style={{ height: 'calc(100vh - 184px)' }} className="flex grow flex-col gap-y-5 overflow-y-auto border-r-[4px] border-gray-200 bg-white px-6">
       <nav className="flex flex-1 flex-col">
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <li>
