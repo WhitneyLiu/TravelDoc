@@ -6,6 +6,7 @@ import HomepageHeader from "./components/HomepageHeader";
 import Greeting from "./components/Greeting";
 import { useSelector } from "react-redux";
 import Sidebar from "./components/Sidebar";
+import Container from "../../sharable-components/Container";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -20,9 +21,14 @@ export default function Home() {
   return (
     <>
       <HomepageHeader onLogout={handleLogout} />
-      <Sidebar />
-      <Greeting userName={userName} />
-
+      <Container className="flex">
+        <div className="w-1/4">
+          <Sidebar />
+        </div>
+        <div className="w-3/4">
+          <Greeting userName={userName} />
+        </div>
+      </Container>
     </>
   );
 }
