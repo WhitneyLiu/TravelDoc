@@ -1,6 +1,6 @@
 import authenticationReducer from "./reducer/authenticationReducer";
-import notificationReducer from "./reducer/notificationReducer";
 import { configureStore } from "@reduxjs/toolkit";
+import notificationReducer from "./reducer/notificationReducer";
 import userReducer from "./reducer/userReducer";
 
 export default configureStore({
