@@ -1,12 +1,12 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import CompletedPage from "./components/pages/completed-page/CompletedPage";
 import Home from "./components/pages/home-page/HomePage";
 import LandingPage from "./components/pages/landing-page/LandingPage";
 import LoginPage from "./components/pages/authentication-pages/LoginPage";
 import PasswordRecoverPage from "./components/pages/authentication-pages/PasswordRecoveryPage";
-import SignupPage from "./components/pages/authentication-pages/SignupPage";
 import Profile from "./components/pages/profile-page/ProfilePage";
-import CompletedPage from "./components/pages/completed-page/CompletedPage";
+import SignupPage from "./components/pages/authentication-pages/SignupPage";
 import SettingsPage from "./components/pages/settings-page/SettingsPage";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "./App.scss";
 
