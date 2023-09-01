@@ -48,9 +48,9 @@ export default function Sidebar({ profileImage, onLogout }) {
 
   return (
     <div
-      style={{ height: "calc(100vh - 184px)" }}
-      className="flex flex-col gap-y-5 overflow-y-auto bg-indigo-700 px-6 rounded-lg"
-    >
+    style={{ height: "100vh" }} 
+    className="fixed top-0 left-0 w-1/6 flex flex-col gap-y-5 overflow-y-auto bg-indigo-700 px-6 pt-16" 
+  >
       <nav className="flex flex-1 flex-col">
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <li>
