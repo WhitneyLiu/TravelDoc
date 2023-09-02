@@ -8,7 +8,6 @@ export default function PdfContainer({ pdfFiles, onPdfClick }) {
     const sortedFiles = [...pdfFiles].sort(
       (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
     );
-    console.log(sortedFiles);
     setCompletedFiles(sortedFiles);
   }
   return (
