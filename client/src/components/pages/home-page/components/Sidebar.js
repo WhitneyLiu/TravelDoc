@@ -1,4 +1,4 @@
-import Container from "../../../sharable-components/Container";
+import HeaderLogo from "./HeaderLogo";
 import {
   ChartPieIcon,
   DocumentDuplicateIcon,
@@ -6,9 +6,8 @@ import {
   HomeIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
 import { useState } from "react";
 
 function classNames(...classes) {
@@ -48,10 +47,13 @@ export default function Sidebar({ profileImage, onLogout }) {
 
   return (
     <div
-    style={{ height: "100vh" }} 
-    className="fixed top-0 left-0 w-1/6 flex flex-col gap-y-5 overflow-y-auto bg-indigo-700 px-6 pt-16" 
-  >
-      <nav className="flex flex-1 flex-col">
+      style={{ height: "100vh" }}
+      className="fixed top-0 left-0 md:w-1/6 flex flex-col bg-indigo-700 px-6 pt-16 md:hidden lg:block "
+    >
+      <div className="hidden md:block fixed left-0 top-0 mt-4 ml-4 z-50">
+        <HeaderLogo className="h-12 w-auto" />
+      </div>
+      <nav className="flex-1 flex flex-col">
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <li>
             <ul role="list" className="-mx-2 space-y-1">
@@ -84,7 +86,7 @@ export default function Sidebar({ profileImage, onLogout }) {
         </ul>
       </nav>
       <div
-        className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white mb-4 relative cursor-pointer"
+        className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white mb-4 relative cursor-pointer "
         onClick={() => setShowDropdown(!showDropdown)} // Toggle dropdown
       >
         <img
