@@ -48,12 +48,12 @@ export default function Sidebar({ profileImage, onLogout }) {
   return (
     <div
       style={{ height: "100vh" }}
-      className="fixed top-0 left-0 md:w-1/6 flex flex-col bg-indigo-700 px-6 pt-16 md:hidden lg:block "
+      className="fixed top-0 left-0 w-full md:w-1/4 lg:w-1/6 flex flex-col bg-indigo-700 px-6 pt-16 md:hidden lg:block"
     >
       <div className="hidden md:block fixed left-0 top-0 mt-4 ml-4 z-50">
         <HeaderLogo className="h-12 w-auto" />
       </div>
-      <nav className="flex-1 flex flex-col">
+      <nav className="flex-1 flex flex-col justify-between">
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <li>
             <ul role="list" className="-mx-2 space-y-1">
@@ -85,17 +85,18 @@ export default function Sidebar({ profileImage, onLogout }) {
           </li>
         </ul>
       </nav>
-      <div
-        className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white mb-4 relative cursor-pointer "
-        onClick={() => setShowDropdown(!showDropdown)} // Toggle dropdown
-      >
-        <img
-          className="h-8 w-8 rounded-full bg-gray-50 "
-          src={profileImage}
-          alt="User Avatar"
-        />
-        <span className="sr-only">Your profile</span>
-        <span aria-hidden="true">{userName}</span>
+      <div className="absolute bottom-5 left-0 w-full p-2">
+        <div
+          className="group flex gap-x-3 p-2 text-sm leading-6 font-semibold text-white hover:bg-indigo-600 rounded-lg mx-2 cursor-pointer"
+          onClick={() => setShowDropdown(!showDropdown)}
+        >
+          <img
+            className="h-7 w-7 rounded-full bg-gray-50"
+            src={profileImage}
+            alt="User Avatar"
+          />
+          <span>{userName}</span>
+        </div>
         {showDropdown && (
           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-56 origin-bottom-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
             <div
@@ -107,8 +108,8 @@ export default function Sidebar({ profileImage, onLogout }) {
             >
               <button
                 onClick={() => {
-                  onLogout(); // Logout action
-                  setShowDropdown(false); // Close dropdown
+                  onLogout();
+                  setShowDropdown(false);
                 }}
                 className="text-gray-700 block w-full px-4 py-2 text-left text-sm"
                 role="menuitem"
