@@ -67,7 +67,7 @@ export default function Layout({ children }) {
         </div>
 
         <div className="w-full md:w-3/4 p-4 relative z-10 ml-0 md:ml-1/4">
-          <div className="fixed left-1/4 top-0 mt-5 ml-[-100px]">
+          <div className="fixed left-1/4 top-0 mt-5 ml-[-100px] z-20">
             <Greeting userName={userName} />
           </div>
           <div className="mt-4">{children}</div>
