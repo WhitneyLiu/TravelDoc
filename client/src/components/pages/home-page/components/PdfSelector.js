@@ -6,7 +6,7 @@ import React, { useState, useRef } from "react";
 export default function PdfSelector({ pdfList }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(true);
-  const itemsPerPage = 1; // Adjust this based on your design
+  const itemsPerPage = 1; // Adjust this based on our design
 
   const totalPages = Math.ceil(pdfList.length / itemsPerPage);
   const offset = (currentPage - 1) * itemsPerPage;
@@ -33,7 +33,7 @@ export default function PdfSelector({ pdfList }) {
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-t border-gray-200 bg-transparent px-4 py-3 sm:px-6">
+        <div className="flex items-center justify-between border-t border-transparent bg-transparent px-4 py-3 sm:px-6">
           <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-gray-700">
