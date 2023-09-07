@@ -4,7 +4,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import Greeting from "../pages/home-page/components/Greeting";
 import HeaderLogo from "../pages/home-page/components/HeaderLogo";
 import { logout } from "../../redux/reducer/authenticationReducer";
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import Sidebar from "../pages/home-page/components/Sidebar";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,23 @@ export default function Layout({ children }) {
   };
 
   const userName = useSelector((state) => state.user.userName);
+
+  const [showGreeting, setShowGreeting] = useState(true);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setShowGreeting(false);
+      } else {
+        setShowGreeting(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <>
@@ -67,9 +84,11 @@ export default function Layout({ children }) {
         </div>
 
         <div className="w-full md:w-3/4 p-4 relative z-10 ml-0 md:ml-1/4">
-          <div className="fixed left-1/4 top-0 mt-5 ml-[-100px] z-20">
-            <Greeting userName={userName} />
-          </div>
+          {showGreeting && (
+            <div className="fixed left-1/4 top-0 mt-5 ml-[-100px] z-20">
+              <Greeting userName={userName} />
+            </div>
+          )}
           <div className="mt-4">{children}</div>
         </div>
       </Container>
