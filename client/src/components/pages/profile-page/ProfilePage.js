@@ -1,8 +1,12 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { setUserName, setUserAvatar } from "../../../redux/reducer/userReducer";
 import Layout from "../../sharable-components/Layout";
-export default function Profile() {
+import ProfileGreeting from "./components/ProfileGreeting";
+import PersonalInfoForm from "./components/PersonalInfoForm";
+import React, { useState } from "react";
+import { setUserName, setUserAvatar } from "../../../redux/reducer/userReducer";
+import { useDispatch } from "react-redux";
+
+
+export default function ProfilePage() {
   const dispatch = useDispatch();
   const [newName, setNewName] = useState("");
   const [newAvatar, setNewAvatar] = useState("");
@@ -16,27 +20,8 @@ export default function Profile() {
 
   return (
     <Layout>
-      <div>
-        <h1>Profile Page</h1>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-          />
-          <button onClick={handleNameChange}>Update Username</button>
-        </div>
-        <div>
-          <label>Avatar URL:</label>
-          <input
-            type="text"
-            value={newAvatar}
-            onChange={(e) => setNewAvatar(e.target.value)}
-          />
-          <button onClick={handleAvatarChange}>Update Avatar</button>
-        </div>
-      </div>
+      <ProfileGreeting />
+      <PersonalInfoForm />
     </Layout>
   );
 }
