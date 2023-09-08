@@ -28,10 +28,7 @@ export default function PersonalInfoForm() {
     // Update Redux store
     dispatch(setUserName(formData.userName));
     dispatch(setUserAvatar(formData.userAvatar));
-    // Update local state to reflect changes
-    setFormData({
-      ...formData,
-    });
+    // No need to update local state here as it's already bound to the form
     // Switch back to view mode
     setIsEditing(false);
   };
@@ -77,6 +74,10 @@ export default function PersonalInfoForm() {
                       type="text"
                       name="username"
                       id="username"
+                      value={formData.userName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, userName: e.target.value })
+                      }
                       autoComplete="username"
                       className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
@@ -105,6 +106,10 @@ export default function PersonalInfoForm() {
                     className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     defaultValue={""}
                     placeholder="Write a few sentences about yourself."
+                    value={formData.about}
+                    onChange={(e) =>
+                      setFormData({ ...formData, about: e.target.value })
+                    }
                   />
                 ) : (
                   <span>{formData.about}</span>
@@ -125,19 +130,23 @@ export default function PersonalInfoForm() {
                   aria-hidden="true"
                 />
               )}
-              <button
-                type="button"
-                className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                onClick={() => fileInputRef.current.click()}
-              >
-                Change
-              </button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                onChange={handleFileChange}
-              />
+              {isEditing && (
+                <>
+                  <button
+                    type="button"
+                    className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                    onClick={() => fileInputRef.current.click()}
+                  >
+                    Change
+                  </button>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -162,6 +171,10 @@ export default function PersonalInfoForm() {
                     name="first-name"
                     id="first-name"
                     autoComplete="given-name"
+                    value={formData.firstName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, firstName: e.target.value })
+                    }
                     className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 ) : (
@@ -184,10 +197,92 @@ export default function PersonalInfoForm() {
                     name="last-name"
                     id="last-name"
                     autoComplete="family-name"
+                    value={formData.lastName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, lastName: e.target.value })
+                    }
                     className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 ) : (
                   <span>{formData.lastName}</span>
+                )}
+              </div>
+            </div>
+
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="occupation"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Occupation
+              </label>
+              <div className="mt-2">
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="occupation"
+                    id="occupation"
+                    autoComplete="occupation"
+                    value={formData.occupation}
+                    onChange={(e) =>
+                      setFormData({ ...formData, occupation: e.target.value })
+                    }
+                    className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                ) : (
+                  <span>{formData.occupation}</span>
+                )}
+              </div>
+            </div>
+
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="phoneNumber"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Phone Number
+              </label>
+              <div className="mt-2">
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="phoneNumber"
+                    id="phoneNumber"
+                    autoComplete="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phoneNumber: e.target.value })
+                    }
+                    className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                ) : (
+                  <span>{formData.phoneNumber}</span>
+                )}
+              </div>
+            </div>
+
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="emergencyContact"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Emergency Contact
+              </label>
+              <div className="mt-2">
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="emergencyContact"
+                    id="emergencyContact"
+                    autoComplete="emergencyContactr"
+                    value={formData.emergencyContact}
+                    onChange={(e) =>
+                      setFormData({ ...formData, emergencyContact: e.target.value })
+                    }
+                    className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                ) : (
+                  <span>{formData.emergencyContact}</span>
                 )}
               </div>
             </div>
@@ -206,6 +301,10 @@ export default function PersonalInfoForm() {
                     name="email"
                     type="email"
                     autoComplete="email"
+                    value={formData.emailAddress}
+                    onChange={(e) =>
+                      setFormData({ ...formData, emailAddress: e.target.value })
+                    }
                     className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 ) : (
@@ -227,6 +326,10 @@ export default function PersonalInfoForm() {
                     id="country"
                     name="country"
                     autoComplete="country-name"
+                    value={formData.country}
+                    onChange={(e) =>
+                      setFormData({ ...formData, country: e.target.value })
+                    }
                     className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                   >
                     <option>United States</option>
@@ -253,6 +356,13 @@ export default function PersonalInfoForm() {
                     name="street-address"
                     id="street-address"
                     autoComplete="street-address"
+                    value={formData.streetAddress}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        streetAddress: e.target.value,
+                      })
+                    }
                     className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 ) : (
@@ -275,6 +385,10 @@ export default function PersonalInfoForm() {
                     name="city"
                     id="city"
                     autoComplete="address-level2"
+                    value={formData.city}
+                    onChange={(e) =>
+                      setFormData({ ...formData, city: e.target.value })
+                    }
                     className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 ) : (
@@ -297,6 +411,13 @@ export default function PersonalInfoForm() {
                     name="region"
                     id="region"
                     autoComplete="address-level1"
+                    value={formData.stateProvince}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        stateProvince: e.target.value,
+                      })
+                    }
                     className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 ) : (
@@ -319,6 +440,10 @@ export default function PersonalInfoForm() {
                     name="postal-code"
                     id="postal-code"
                     autoComplete="postal-code"
+                    value={formData.zipPostal}
+                    onChange={(e) =>
+                      setFormData({ ...formData, zipPostal: e.target.value })
+                    }
                     className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 ) : (

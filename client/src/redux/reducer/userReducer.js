@@ -11,7 +11,10 @@ const initialState = {
   streetAddress:'',
   city:'',
   stateProvince:'',
-  zipPostal:''
+  zipPostal:'',
+  occupation:'',
+  phoneNumber:'',
+  emergencyContact:''
 
   // ...other user info
 };

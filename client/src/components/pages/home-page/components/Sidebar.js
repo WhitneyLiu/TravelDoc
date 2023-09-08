@@ -15,6 +15,7 @@ function classNames(...classes) {
 }
 
 export default function Sidebar({ profileImage, onLogout }) {
+  const userAvatar = useSelector((state) => state.user.userAvatar);
   const userName = useSelector((state) => state.user.userName);
   const [showDropdown, setShowDropdown] = useState(false);
   const { pathname } = useLocation();
@@ -92,7 +93,7 @@ export default function Sidebar({ profileImage, onLogout }) {
         >
           <img
             className="h-7 w-7 rounded-full bg-gray-50"
-            src={profileImage}
+            src={userAvatar || profileImage} // Fallback to profileImage if userAvatar is not available
             alt="User Avatar"
           />
           <span>{userName}</span>
