@@ -2,6 +2,7 @@ import BackgroundImage from "./BackgroundImage";
 import Container from "./Container";
 import { Dialog, Transition } from "@headlessui/react";
 import Greeting from "../pages/home-page/components/Greeting";
+import { getSession } from "../../redux/reducer/authenticationReducer";
 import HeaderLogo from "../pages/home-page/components/HeaderLogo";
 import { logout } from "../../redux/reducer/authenticationReducer";
 import React, { useState, useEffect, Fragment } from "react";
@@ -19,8 +20,8 @@ export default function Layout({ children }) {
     dispatch(logout());
     navigate("/");
   };
-
-  const userName = useSelector((state) => state.user.userName);
+  const email = useSelector((state) => state.authentication.session.email);
+  const userName = email.split('@')[0];
 
   const [showGreeting, setShowGreeting] = useState(true);
   useEffect(() => {

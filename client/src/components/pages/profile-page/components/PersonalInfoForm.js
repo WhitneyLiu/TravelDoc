@@ -1,23 +1,31 @@
-import React, { useState, useRef } from "react";
-import { UserCircleIcon } from "@heroicons/react/24/solid";
+import { getSession } from "../../../../redux/reducer/authenticationReducer";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setUserName,
-  setUserAvatar,
-} from "../../../../redux/reducer/userReducer";
+import { updateUser } from "../../../../redux/reducer/userReducer";
 
 export default function PersonalInfoForm() {
   const dispatch = useDispatch();
-  const userName = useSelector((state) => state.user.userName);
-  const userAvatar = useSelector((state) => state.user.userAvatar);
+  useEffect(() => {
+    dispatch(getSession());
+  }, [dispatch]);
+
+  const email = useSelector((state) => state.authentication.session.email);
+  const userNameToShow = email.split("@")[0];
+
   const [formData, setFormData] = useState({
-    userName: userName,
-    userAvatar: userAvatar,
+    userName: userNameToShow,
+    about: "",
     firstName: "",
     lastName: "",
-    age: "",
-    gender: "",
+    birthday: "",
+    emailAddress: "",
+    country: "",
+    streetAddress: "",
+    city: "",
+    stateProvince: "",
+    zipPostal: "",
     occupation: "",
+    phoneNumber: "",
     emergencyContact: "",
   });
 
@@ -26,29 +34,10 @@ export default function PersonalInfoForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Update Redux store
-    dispatch(setUserName(formData.userName));
-    dispatch(setUserAvatar(formData.userAvatar));
+    dispatch(updateUser(formData));
     // No need to update local state here as it's already bound to the form
     // Switch back to view mode
     setIsEditing(false);
-  };
-
-  const fileInputRef = useRef(null);
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // You can add logic here to upload the file to a server
-      // For now, we'll just update the local state
-      setFormData({
-        ...formData,
-        userAvatar: URL.createObjectURL(file),
-      });
-      dispatch(setUserAvatar(URL.createObjectURL(file)));
-    }
-  };
-
-  const triggerFileInput = () => {
-    fileInputRef.current.click();
   };
 
   return (
@@ -68,85 +57,20 @@ export default function PersonalInfoForm() {
                 Username
               </label>
               <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      name="username"
-                      id="username"
-                      value={formData.userName}
-                      onChange={(e) =>
-                        setFormData({ ...formData, userName: e.target.value })
-                      }
-                      autoComplete="username"
-                      className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
-                  ) : (
-                    <span className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                      {formData.userName}
-                    </span>
-                  )}
-                </div>
+                <span>{formData.userName} </span>
               </div>
             </div>
 
-            <div className="col-span-full">
+            <div className="sm:col-span-4">
               <label
-                htmlFor="about"
+                htmlFor="email"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                About
+                Email address
               </label>
               <div className="mt-2">
-                {isEditing ? (
-                  <textarea
-                    id="about"
-                    name="about"
-                    rows={3}
-                    className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    defaultValue={""}
-                    placeholder="Write a few sentences about yourself."
-                    value={formData.about}
-                    onChange={(e) =>
-                      setFormData({ ...formData, about: e.target.value })
-                    }
-                  />
-                ) : (
-                  <span>{formData.about}</span>
-                )}
+                <span>{email}</span>
               </div>
-            </div>
-
-            <div className="mt-2 flex items-center gap-x-3">
-              {formData.userAvatar ? (
-                <img
-                  src={formData.userAvatar}
-                  alt="User Avatar"
-                  className="h-12 w-12 rounded-full"
-                />
-              ) : (
-                <UserCircleIcon
-                  className="h-12 w-12 text-gray-300"
-                  aria-hidden="true"
-                />
-              )}
-              {isEditing && (
-                <>
-                  <button
-                    type="button"
-                    className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                    onClick={() => fileInputRef.current.click()}
-                  >
-                    Change
-                  </button>
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    style={{ display: "none" }}
-                    onChange={handleFileChange}
-                  />
-                </>
-              )}
             </div>
           </div>
         </div>
@@ -205,6 +129,32 @@ export default function PersonalInfoForm() {
                   />
                 ) : (
                   <span>{formData.lastName}</span>
+                )}
+              </div>
+            </div>
+
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="birthday"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Birthday
+              </label>
+              <div className="mt-2">
+                {isEditing ? (
+                  <input
+                    type="date"
+                    name="birthday"
+                    id="birthday"
+                    max={new Date().toISOString().split("T")[0]}
+                    value={formData.birthday}
+                    onChange={(e) =>
+                      setFormData({ ...formData, birthday: e.target.value })
+                    }
+                    className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                ) : (
+                  <span>{formData.birthday}</span>
                 )}
               </div>
             </div>
@@ -277,38 +227,15 @@ export default function PersonalInfoForm() {
                     autoComplete="emergencyContactr"
                     value={formData.emergencyContact}
                     onChange={(e) =>
-                      setFormData({ ...formData, emergencyContact: e.target.value })
+                      setFormData({
+                        ...formData,
+                        emergencyContact: e.target.value,
+                      })
                     }
                     className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 ) : (
                   <span>{formData.emergencyContact}</span>
-                )}
-              </div>
-            </div>
-
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Email address
-              </label>
-              <div className="mt-2">
-                {isEditing ? (
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    value={formData.emailAddress}
-                    onChange={(e) =>
-                      setFormData({ ...formData, emailAddress: e.target.value })
-                    }
-                    className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                ) : (
-                  <span>{formData.emailAddress}</span>
                 )}
               </div>
             </div>
@@ -332,9 +259,203 @@ export default function PersonalInfoForm() {
                     }
                     className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                   >
-                    <option>United States</option>
+                    <option>Afghanistan</option>
+                    <option>Albania</option>
+                    <option>Algeria</option>
+                    <option>Andorra</option>
+                    <option>Angola</option>
+                    <option>Antigua and Barbuda</option>
+                    <option>Argentina</option>
+                    <option>Armenia</option>
+                    <option>Australia</option>
+                    <option>Austria</option>
+                    <option>Azerbaijan</option>
+                    <option>Bahamas</option>
+                    <option>Bahrain</option>
+                    <option>Bangladesh</option>
+                    <option>Barbados</option>
+                    <option>Belarus</option>
+                    <option>Belgium</option>
+                    <option>Belize</option>
+                    <option>Benin</option>
+                    <option>Bhutan</option>
+                    <option>Bolivia</option>
+                    <option>Bosnia and Herzegovina</option>
+                    <option>Botswana</option>
+                    <option>Brazil</option>
+                    <option>Brunei</option>
+                    <option>Bulgaria</option>
+                    <option>Burkina Faso</option>
+                    <option>Burundi</option>
+                    <option>Cabo Verde</option>
+                    <option>Cambodia</option>
+                    <option>Cameroon</option>
                     <option>Canada</option>
+                    <option>Central African Republic</option>
+                    <option>Chad</option>
+                    <option>Chile</option>
+                    <option>China</option>
+                    <option>Colombia</option>
+                    <option>Comoros</option>
+                    <option>Congo, Democratic Republic of the</option>
+                    <option>Congo, Republic of the</option>
+                    <option>Costa Rica</option>
+                    <option>Cote d'Ivoire</option>
+                    <option>Croatia</option>
+                    <option>Cuba</option>
+                    <option>Cyprus</option>
+                    <option>Czechia</option>
+                    <option>Denmark</option>
+                    <option>Djibouti</option>
+                    <option>Dominica</option>
+                    <option>Dominican Republic</option>
+                    <option>East Timor</option>
+                    <option>Ecuador</option>
+                    <option>Egypt</option>
+                    <option>El Salvador</option>
+                    <option>Equatorial Guinea</option>
+                    <option>Eritrea</option>
+                    <option>Estonia</option>
+                    <option>Eswatini</option>
+                    <option>Ethiopia</option>
+                    <option>Fiji</option>
+                    <option>Finland</option>
+                    <option>France</option>
+                    <option>Gabon</option>
+                    <option>Gambia</option>
+                    <option>Georgia</option>
+                    <option>Germany</option>
+                    <option>Ghana</option>
+                    <option>Greece</option>
+                    <option>Grenada</option>
+                    <option>Guatemala</option>
+                    <option>Guinea</option>
+                    <option>Guinea-Bissau</option>
+                    <option>Guyana</option>
+                    <option>Haiti</option>
+                    <option>Honduras</option>
+                    <option>Hungary</option>
+                    <option>Iceland</option>
+                    <option>India</option>
+                    <option>Indonesia</option>
+                    <option>Iran</option>
+                    <option>Iraq</option>
+                    <option>Ireland</option>
+                    <option>Israel</option>
+                    <option>Italy</option>
+                    <option>Jamaica</option>
+                    <option>Japan</option>
+                    <option>Jordan</option>
+                    <option>Kazakhstan</option>
+                    <option>Kenya</option>
+                    <option>Kiribati</option>
+                    <option>Korea, North</option>
+                    <option>Korea, South</option>
+                    <option>Kosovo</option>
+                    <option>Kuwait</option>
+                    <option>Kyrgyzstan</option>
+                    <option>Laos</option>
+                    <option>Latvia</option>
+                    <option>Lebanon</option>
+                    <option>Lesotho</option>
+                    <option>Liberia</option>
+                    <option>Libya</option>
+                    <option>Liechtenstein</option>
+                    <option>Lithuania</option>
+                    <option>Luxembourg</option>
+                    <option>Madagascar</option>
+                    <option>Malawi</option>
+                    <option>Malaysia</option>
+                    <option>Maldives</option>
+                    <option>Mali</option>
+                    <option>Malta</option>
+                    <option>Marshall Islands</option>
+                    <option>Mauritania</option>
+                    <option>Mauritius</option>
                     <option>Mexico</option>
+                    <option>Micronesia</option>
+                    <option>Moldova</option>
+                    <option>Monaco</option>
+                    <option>Mongolia</option>
+                    <option>Montenegro</option>
+                    <option>Morocco</option>
+                    <option>Mozambique</option>
+                    <option>Myanmar</option>
+                    <option>Namibia</option>
+                    <option>Nauru</option>
+                    <option>Nepal</option>
+                    <option>Netherlands</option>
+                    <option>New Zealand</option>
+                    <option>Nicaragua</option>
+                    <option>Niger</option>
+                    <option>Nigeria</option>
+                    <option>North Macedonia</option>
+                    <option>Norway</option>
+                    <option>Oman</option>
+                    <option>Pakistan</option>
+                    <option>Palau</option>
+                    <option>Palestine</option>
+                    <option>Panama</option>
+                    <option>Papua New Guinea</option>
+                    <option>Paraguay</option>
+                    <option>Peru</option>
+                    <option>Philippines</option>
+                    <option>Poland</option>
+                    <option>Portugal</option>
+                    <option>Qatar</option>
+                    <option>Romania</option>
+                    <option>Russia</option>
+                    <option>Rwanda</option>
+                    <option>Saint Kitts and Nevis</option>
+                    <option>Saint Lucia</option>
+                    <option>Saint Vincent and the Grenadines</option>
+                    <option>Samoa</option>
+                    <option>San Marino</option>
+                    <option>Sao Tome and Principe</option>
+                    <option>Saudi Arabia</option>
+                    <option>Senegal</option>
+                    <option>Serbia</option>
+                    <option>Seychelles</option>
+                    <option>Sierra Leone</option>
+                    <option>Singapore</option>
+                    <option>Slovakia</option>
+                    <option>Slovenia</option>
+                    <option>Solomon Islands</option>
+                    <option>Somalia</option>
+                    <option>South Africa</option>
+                    <option>South Sudan</option>
+                    <option>Spain</option>
+                    <option>Sri Lanka</option>
+                    <option>Sudan</option>
+                    <option>Suriname</option>
+                    <option>Sweden</option>
+                    <option>Switzerland</option>
+                    <option>Syria</option>
+                    <option>Taiwan</option>
+                    <option>Tajikistan</option>
+                    <option>Tanzania</option>
+                    <option>Thailand</option>
+                    <option>Togo</option>
+                    <option>Tonga</option>
+                    <option>Trinidad and Tobago</option>
+                    <option>Tunisia</option>
+                    <option>Turkey</option>
+                    <option>Turkmenistan</option>
+                    <option>Tuvalu</option>
+                    <option>Uganda</option>
+                    <option>Ukraine</option>
+                    <option>United Arab Emirates</option>
+                    <option>United Kingdom</option>
+                    <option>United States</option>
+                    <option>Uruguay</option>
+                    <option>Uzbekistan</option>
+                    <option>Vanuatu</option>
+                    <option>Vatican City</option>
+                    <option>Venezuela</option>
+                    <option>Vietnam</option>
+                    <option>Yemen</option>
+                    <option>Zambia</option>
+                    <option>Zimbabwe</option>
                   </select>
                 ) : (
                   <span>{formData.country}</span>
@@ -448,6 +569,33 @@ export default function PersonalInfoForm() {
                   />
                 ) : (
                   <span>{formData.zipPostal}</span>
+                )}
+              </div>
+            </div>
+
+            <div className="col-span-full">
+              <label
+                htmlFor="about"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                About
+              </label>
+              <div className="mt-2">
+                {isEditing ? (
+                  <textarea
+                    id="about"
+                    name="about"
+                    rows={3}
+                    className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    defaultValue={""}
+                    placeholder="Write a few sentences about yourself."
+                    value={formData.about}
+                    onChange={(e) =>
+                      setFormData({ ...formData, about: e.target.value })
+                    }
+                  />
+                ) : (
+                  <span>{formData.about}</span>
                 )}
               </div>
             </div>

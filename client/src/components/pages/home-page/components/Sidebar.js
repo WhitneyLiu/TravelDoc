@@ -1,3 +1,4 @@
+import { getSession } from "../../../../redux/reducer/authenticationReducer";
 import HeaderLogo from "./HeaderLogo";
 import {
   ChartPieIcon,
@@ -9,14 +10,15 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Sidebar({ profileImage, onLogout }) {
-  const userAvatar = useSelector((state) => state.user.userAvatar);
-  const userName = useSelector((state) => state.user.userName);
+  const email = useSelector((state) => state.authentication.session.email);
+  const userName = email.split("@")[0];
   const [showDropdown, setShowDropdown] = useState(false);
   const { pathname } = useLocation();
   const navigation = [
@@ -91,10 +93,9 @@ export default function Sidebar({ profileImage, onLogout }) {
           className="group flex gap-x-3 p-2 text-sm leading-6 font-semibold text-white hover:bg-indigo-600 rounded-lg mx-2 cursor-pointer"
           onClick={() => setShowDropdown(!showDropdown)}
         >
-          <img
-            className="h-7 w-7 rounded-full bg-gray-50"
-            src={userAvatar || profileImage} // Fallback to profileImage if userAvatar is not available
-            alt="User Avatar"
+          <UserCircleIcon
+            className="h-7 w-7 rounded-full text-white"
+            aria-hidden="true"
           />
           <span>{userName}</span>
         </div>
