@@ -6,9 +6,9 @@ import StatBox from "./components/StatsBox";
 export default function Home() {
   // Mock data for PDFs
   const mockPdfList = [
-    { name: 'File1.pdf' },
-    { name: 'File2.pdf' },
-    { name: 'File3.pdf' },
+    { name: "File1.pdf" },
+    { name: "File2.pdf" },
+    { name: "File3.pdf" },
   ];
   const [pdfList, setPdfList] = useState([]);
   useEffect(() => {
@@ -17,11 +17,10 @@ export default function Home() {
   }, []);
   return (
     <Layout>
-      <div className="relative md:fixed left-1/4 top-0 mt-16 ml-[-60px] w-full md:w-3/4 z-10">
+      <div className="relative md:fixed left-1/4 top-0 mt-16 ml-[-60px] w-full md:w-3/4 z-10  max-h-[90vh] overflow-y-auto pr-4">
         <StatBox />
         <PdfSelector pdfList={mockPdfList} />
       </div>
     </Layout>
   );
 }
-

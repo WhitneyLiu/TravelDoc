@@ -1,21 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  userName: 'Guest', // initial state
-  userAvatar: '', // initial state for avatar
-  about:'',
-  firstName:'',
-  lastName:'',
-  emailAddress:'',
-  country:'',
-  streetAddress:'',
-  city:'',
-  stateProvince:'',
-  zipPostal:'',
-  occupation:'',
-  phoneNumber:'',
-  emergencyContact:''
-
+  userName: 'Guest',
+  about: '',
+  firstName: '',
+  lastName: '',
+  birthday:'',
+  emailAddress: '',
+  country: '',
+  streetAddress: '',
+  city: '',
+  stateProvince: '',
+  zipPostal: '',
+  occupation: '',
+  phoneNumber: '',
+  emergencyContact: ''
   // ...other user info
 };
 
@@ -23,16 +22,14 @@ const userReducer = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUserName: (state, action) => {
-      state.userName = action.payload;
+    updateUser: (state, action) => {
+      // This will merge the incoming payload into the existing state
+      Object.assign(state, action.payload);
     },
-    setUserAvatar: (state, action) => { // new reducer for avatar
-        state.userAvatar = action.payload;
-      },
-    // ...other reducers
+    // You can still add other reducers if you need to handle specific fields
   },
 });
 
-export const { setUserName, setUserAvatar } = userReducer.actions;
+export const { updateUser } = userReducer.actions;
 
 export default userReducer.reducer;
