@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CompletedPage from "./components/pages/completed-page/CompletedPage";
+import { getSession } from "./redux/reducer/authenticationReducer";
 import Home from "./components/pages/home-page/HomePage";
 import LandingPage from "./components/pages/landing-page/LandingPage";
 import LoginPage from "./components/pages/authentication-pages/LoginPage";
@@ -7,11 +8,21 @@ import PasswordRecoverPage from "./components/pages/authentication-pages/Passwor
 import ProfilePage from "./components/pages/profile-page/ProfilePage";
 import SignupPage from "./components/pages/authentication-pages/SignupPage";
 import SettingsPage from "./components/pages/settings-page/SettingsPage";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect } from 'react';
 import "./App.scss";
 
 function App() {
-  const { session } = useSelector((state) => state.authentication);
+  const dispatch = useDispatch();
+  const { session } = useSelector((state) => state.authentication); // Keep this line
+
+  useEffect(() => {
+    dispatch(getSession())
+      .catch((error) => {
+        console.error('Failed to get session:', error);
+        // Handle logout or redirection here if needed
+      });
+  }, [dispatch]);
 
   return (
     <div className="App">

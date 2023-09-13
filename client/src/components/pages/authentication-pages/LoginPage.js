@@ -4,6 +4,7 @@ import AuthFormContainer from "./components/AuthFormContainer";
 import AuthInput from "./components/AuthInput";
 import SubmitButton from "./components/SubmitButton";
 import { authenticateUser } from "../../../redux/reducer/authenticationReducer";
+import { showError } from "../../../redux/reducer/notificationReducer";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -15,10 +16,15 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    dispatch(authenticateUser({ email, password }));
-    navigate("/home");
+    try {
+      await dispatch(authenticateUser({ email, password })).unwrap();
+      navigate("/home");
+    } catch (error) {
+      console.error("Authentication failed:", error);
+      dispatch(showError("Incorrect username or password.")); // Dispatching showError action
+    }
   };
 
   return (
