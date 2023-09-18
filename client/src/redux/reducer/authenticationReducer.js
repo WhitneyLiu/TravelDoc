@@ -131,4 +131,43 @@ export const authenticationReducer = createSlice({
 
 export const { logout } = authenticationReducer.actions;
 
+//trying to delete user info in redux
+// export const deleteUser = createAsyncThunk(
+//   "authentication/deleteUser",
+//   async (_, { dispatch, getState }) => {
+//     const state = getState();
+//     const isAuthenticated = state.authentication.isAuthenticated; // Get user authentication information from your state
+
+//     if (!isAuthenticated) {
+//       throw new Error("User is not authenticated"); // Throw an error or perform other actions
+//     }
+
+//     try {
+//       const user = Pool.getCurrentUser();
+//       if (user) {
+//         // Perform the delete user operation
+//         await new Promise((resolve, reject) => {
+//           user.deleteUser((err, data) => {
+//             if (err) {
+//               reject(err);
+//             } else {
+//               resolve(data);
+//             }
+//           });
+//         });
+
+//         // After deleting the user, perform the logout operation
+//         dispatch(logout());
+
+//         return "User deleted";
+//       } else {
+//         throw new Error("User not found");
+//       }
+//     } catch (error) {
+//       console.error("User deletion error:", error);
+//       throw error;
+//     }
+//   }
+// );
+
 export default authenticationReducer.reducer;
