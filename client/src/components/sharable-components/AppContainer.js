@@ -2,7 +2,7 @@ import {
   ArrowRightOnRectangleIcon,
   Bars3Icon,
   Cog8ToothIcon,
-  DocumentDuplicateIcon,
+  DocumentTextIcon,
   HomeIcon,
   UserIcon,
   XMarkIcon,
@@ -11,19 +11,14 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { logout } from "../../redux/reducer/authenticationReducer";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 
 const navigation = [
-  { name: "Home", href: "/home", icon: HomeIcon, current: true },
-  { name: "Profile", href: "/profile", icon: UserIcon, current: false },
-  {
-    name: "Documents",
-    href: "/documents",
-    icon: DocumentDuplicateIcon,
-    current: false,
-  },
-  { name: "Settings", href: "/settings", icon: Cog8ToothIcon, current: false },
+  { name: "Home", href: "/home", icon: HomeIcon },
+  { name: "Profile", href: "/profile", icon: UserIcon },
+  { name: "Documents", href: "/documents", icon: DocumentTextIcon },
+  { name: "Settings", href: "/settings", icon: Cog8ToothIcon },
 ];
 
 function classNames(...classes) {
@@ -34,6 +29,7 @@ export default function AppContainer(props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -109,7 +105,7 @@ export default function AppContainer(props) {
                                 <a
                                   href={item.href}
                                   className={classNames(
-                                    item.current
+                                    item.href === pathname
                                       ? "bg-gray-50 text-blue-600"
                                       : "text-gray-700 hover:text-blue-600 hover:bg-gray-50",
                                     "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
@@ -117,7 +113,7 @@ export default function AppContainer(props) {
                                 >
                                   <item.icon
                                     className={classNames(
-                                      item.current
+                                      item.href === pathname
                                         ? "text-blue-600"
                                         : "text-gray-400 group-hover:text-blue-600",
                                       "h-6 w-6 shrink-0"
@@ -155,7 +151,7 @@ export default function AppContainer(props) {
                         <a
                           href={item.href}
                           className={classNames(
-                            item.current
+                            item.href === pathname
                               ? "bg-gray-50 text-blue-600"
                               : "text-gray-700 hover:text-blue-600 hover:bg-gray-50",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
@@ -163,7 +159,7 @@ export default function AppContainer(props) {
                         >
                           <item.icon
                             className={classNames(
-                              item.current
+                              item.href === pathname
                                 ? "text-blue-600"
                                 : "text-gray-400 group-hover:text-blue-600",
                               "h-6 w-6 shrink-0"
