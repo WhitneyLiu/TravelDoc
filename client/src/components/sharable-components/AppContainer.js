@@ -16,8 +16,8 @@ import Logo from "./Logo";
 
 const navigation = [
   { name: "Home", href: "/home", icon: HomeIcon },
-  { name: "Profile", href: "/profile", icon: UserIcon },
   { name: "Documents", href: "/documents", icon: DocumentTextIcon },
+  { name: "Profile", href: "/profile", icon: UserIcon },
   { name: "Settings", href: "/settings", icon: Cog8ToothIcon },
 ];
 
