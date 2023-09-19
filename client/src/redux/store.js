@@ -1,5 +1,6 @@
 import authenticationReducer from "./reducer/authenticationReducer";
 import notificationReducer from "./reducer/notificationReducer";
+import profileReducer from "./reducer/profileReducer";
 import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 import { combineReducers } from 'redux';
@@ -8,12 +9,14 @@ import { persistReducer } from "redux-persist";
 
 const reducers = combineReducers({
   authentication: authenticationReducer,
-  notification: notificationReducer,     
+  notification: notificationReducer,   
+  profile: profileReducer,  
  });
 
 const persistConfig = {
   key: 'root',
   storage,
+  // whitelist: ['authentication']
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

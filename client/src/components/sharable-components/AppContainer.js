@@ -92,9 +92,9 @@ export default function AppContainer(props) {
                     </div>
                   </Transition.Child>
                   {/* Sidebar component, swap this element with another sidebar if you like */}
-                  <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2">
+                  <div className="flex grow flex-col gap-y-5 bg-white px-6 pb-2">
                     <div className="flex h-16 shrink-0 items-center">
-                      <Logo className="h-8 w-auto text-slate-900" />
+                      <Logo className="h-8 w-auto text-slate-900 hover:cursor-default" />
                     </div>
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -138,9 +138,9 @@ export default function AppContainer(props) {
         {/* Static sidebar for desktop */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
+          <div className="flex grow flex-col gap-y-5 border-r border-gray-200 bg-white px-6">
             <div className="flex h-16 shrink-0 items-center">
-              <Logo className="h-8 w-auto text-slate-900" />
+              <Logo className="h-8 w-auto text-slate-900 hover:cursor-default" />
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -173,7 +173,7 @@ export default function AppContainer(props) {
                   </ul>
                 </li>
                 <li className="-mx-6 mt-auto">
-                  <div className="group">
+                  <div className="group hover:cursor-pointer">
                     <a
                       className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50 group-hover:text-blue-600"
                       onClick={handleLogout}
@@ -197,20 +197,26 @@ export default function AppContainer(props) {
             <span className="sr-only">Open sidebar</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
-          <div className="flex-1 text-sm font-semibold leading-6 text-gray-900" />
-          <div className="group">
-            <a
-              className="flex items-center gap-x-4 text-sm font-semibold leading-6 text-gray-900 group-hover:text-blue-600"
-              onClick={handleLogout}
-            >
-              <ArrowRightOnRectangleIcon className="h-6 w-6 shrink-0 rounded-full text-gray-400 group-hover:text-blue-600" />
-              <span aria-hidden="true">Sign out</span>
-            </a>
+          <div className="flex flex-1 items-center justify-center leading-6">
+            <Logo className="h-8 w-auto text-slate-900 hover:cursor-default" />
           </div>
+          <a
+            className="flex items-center gap-x-4 text-sm font-semibold leading-6 text-gray-900 hover:cursor-pointer"
+            onClick={handleLogout}
+          >
+            <ArrowRightOnRectangleIcon className="h-6 w-6 shrink-0 rounded-full text-gray-600 hover:text-blue-600" />
+          </a>
         </div>
 
         <main className="py-10 lg:pl-72">
-          <div className="px-4 sm:px-6 lg:px-8">{props.children}</div>
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="text-left">
+              {" "}
+              <div className="overflow-hidden bg-white/80 shadow rounded-lg p-8">
+                {props.children}
+              </div>
+            </div>
+          </div>
         </main>
       </div>
     </>
