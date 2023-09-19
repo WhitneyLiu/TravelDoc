@@ -7,7 +7,7 @@ export default function ProfilePage() {
 
   return (
     <AppContainer>
-        <div className=" sm:px-0">
+        <div className="sm:px-0">
           <h3 className="text-2xl font-semibold leading-7 text-gray-900 mb-4">
             Profile
           </h3>
