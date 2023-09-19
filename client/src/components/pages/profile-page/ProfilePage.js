@@ -1,18 +1,28 @@
-import Layout from "../../sharable-components/Layout";
-import ProfileGreeting from "./components/ProfileGreeting";
-import PersonalInfoForm from "./components/PersonalInfoForm";
-import React from "react";
+import AppContainer from "../../sharable-components/AppContainer";
+import ListItem from "./components/ListItem";
+import { useSelector } from "react-redux";
 
 export default function ProfilePage() {
-  return (
-    <Layout>
-      <div className="relative md:fixed left-1/4 top-0 mt-5 ml-[-125px] w-full md:w-1/4 z-10">
-        <ProfileGreeting />
-      </div>
+  const profile = useSelector((state) => state.profile);
 
-      <div className="relative md:fixed left-1/4 top-0 mt-[120px] ml-[-125px] w-full md:w-3/4 z-10 max-h-[calc(100vh-200px)] overflow-y-auto pr-4">
-        <PersonalInfoForm />
-      </div>
-    </Layout>
+  return (
+    <AppContainer>
+        <div className="sm:px-0">
+          <h3 className="text-2xl font-semibold leading-7 text-gray-900 mb-4">
+            Profile
+          </h3>
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+            Complete Your Profile, Elevate Your Experience: With Personalized
+            Highlights and Smart Autofill, We Are Here to Assist You Better!
+          </p>
+        </div>
+        <div className="mt-6 border-t border-gray-100 overflow-auto">
+          <dl className="divide-y divide-gray-100">
+            {Object.keys(profile).map((key) => (
+              <ListItem key={key} profile={profile[key]} />
+            ))}
+          </dl>
+        </div>
+    </AppContainer>
   );
 }

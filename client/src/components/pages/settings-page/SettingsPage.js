@@ -1,20 +1,64 @@
-import React from "react";
-import Layout from "../../sharable-components/Layout";
-import ClearSignedFiles from "./components/ClearSignedFiles";
-import DeleteAccount from "./components/DeleteAccount";
+import AppContainer from "../../sharable-components/AppContainer";
 
 export default function SettingsPage() {
   return (
-    <Layout>
-      <div className=" fixed left-1/4 top-0 mt-16 ml-[-60px] w-full md:w-3/4">
-        <div className="flex flex-col items-start">
-          <span className="text-slate-900 text-l">Manage Your Completed Documents and Accounts Here.</span>
-          <div className=" w-4/5 mt-10">
-            <ClearSignedFiles />
-            <DeleteAccount />
-         </div>
+    <AppContainer>
+      <div className="sm:px-0 mb-8">
+        <h3 className="text-2xl font-semibold leading-7 text-gray-900 mb-4">
+          Settings
+        </h3>
+        <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+          Manage Your Completed Documents and Accounts Here.
+        </p>
+      </div>
+      <div className="border-t border-gray-100 mb-8"></div>
+      <div className="divide-y divide-white/5 mb-8">
+        <div className="grid max-w-7xl grid-cols-1 md:grid-cols-3">
+          <div>
+            <h2 className="text-base font-semibold leading-7 text-black">
+              Clear ALL signed documents
+            </h2>
+            <p className="mt-1 text-sm leading-6 text-gray-600">
+              Want to clear all signed documents? You can do so here. This
+              action is not reversible. All information related to this account
+              will be deleted permanently.
+            </p>
+          </div>
+
+          <div className="flex items-start justify-end md:col-span-2">
+            <button
+              type="submit"
+              className="bg-transparent hover:bg-red-600 text-red-600 font-semibold hover:text-white py-2 px-4 border border-red-600 hover:border-transparent rounded"
+            >
+              Yes, clear all signed documents
+            </button>
+          </div>
         </div>
       </div>
-    </Layout>
+      <div className="border-t border-gray-100 mb-8"></div>
+      <div className="divide-y divide-white/5">
+        <div className="grid max-w-7xl grid-cols-1 md:grid-cols-3">
+          <div>
+            <h2 className="text-base font-semibold leading-7 text-black">
+              Delete account
+            </h2>
+            <p className="mt-1 text-sm leading-6 text-gray-600">
+              No longer want to use our service? You can delete your account
+              here. This action is not reversible. All information related to
+              this account will be deleted permanently.
+            </p>
+          </div>
+
+          <div className="flex items-start justify-end md:col-span-2">
+            <button
+              type="submit"
+              className="bg-transparent hover:bg-red-600 text-red-600 font-semibold hover:text-white py-2 px-4 border border-red-600 hover:border-transparent rounded"
+            >
+              Yes, delete my account
+            </button>
+          </div>
+        </div>
+      </div>
+    </AppContainer>
   );
 }

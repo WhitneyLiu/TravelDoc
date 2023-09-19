@@ -128,7 +128,7 @@ export default function PasswordRecoverPage() {
               type="password"
               label="Confirm password:"
             />
-            <SubmitButton text="Set password" />
+            <SubmitButton text="Send verification code" />
           </>
         )}
       </AuthFormContainer>
