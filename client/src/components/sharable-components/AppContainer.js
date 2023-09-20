@@ -10,9 +10,10 @@ import {
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { logout } from "../../redux/reducer/authenticationReducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
+import Modal from "./Modal";
 
 const navigation = [
   { name: "Home", href: "/home", icon: HomeIcon },
@@ -31,18 +32,41 @@ export default function AppContainer(props) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
+  const sessionValid = useSelector((state) => state.authentication.sessionValid);
+  // get isLoading from redux store
+  const isloading = useSelector((state) => state.authentication.isLoading);
+
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
   };
 
+  if (!sessionValid && !isloading) {
+    // Redirect to the login page or show a message
+    // You can modify this part based on your application's behavior
+    return (
+      <div className="text-center mt-10">
+        <p className="text-red-600 font-semibold">
+          Session has expired. Please log in again.
+        </p>
+        <button
+          className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          onClick={() => navigate("/login")}
+        >
+          Log In
+        </button>
+      </div>
+    );
+  }
+
   return (
     <>
+      <Modal/>
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
-            className="relative z-50 lg:hidden"
+            className="relative z-40 lg:hidden"
             onClose={setSidebarOpen}
           >
             <Transition.Child
@@ -136,7 +160,7 @@ export default function AppContainer(props) {
         </Transition.Root>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+        <div className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 border-r border-gray-200 bg-white px-6">
             <div className="flex h-16 shrink-0 items-center">
@@ -188,7 +212,7 @@ export default function AppContainer(props) {
           </div>
         </div>
 
-        <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+        <div className="sticky top-0 z-30 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
           <button
             type="button"
             className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
