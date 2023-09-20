@@ -3,6 +3,14 @@ import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { showError } from "./notificationReducer";
 
+// check if session is valid
+export const isSessionValid = (session) => {
+  const { accessToken, clockDrift, refreshToken } = session;
+  const now = Math.floor(Date.now() / 1000);
+  const expiresAt = accessToken.payload.exp - clockDrift;
+  return now < expiresAt;
+};
+
 export const authenticateUser = createAsyncThunk(
   "authentication/authenticateUser",
   async ({ email, password }, { dispatch }) => {
@@ -39,6 +47,36 @@ export const authenticateUser = createAsyncThunk(
     } catch (error) {
       console.error("Authentication error:", error);
       throw error;
+    }
+  }
+);
+
+export const extendSession = createAsyncThunk(
+  "authentication/extendSession",
+  async (_, { rejectWithValue }) => {
+    try {
+      const user = Pool.getCurrentUser();
+      if (user) {
+        return new Promise((resolve, reject) => {
+          user.getSession(async (err, session) => {
+            if (err) {
+              reject(err);
+            } else {
+              user.refreshSession(session.getRefreshToken(), (err, session) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve({ user, ...session });
+                }
+              });
+            }
+          });
+        });
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -87,6 +125,7 @@ export const authenticationReducer = createSlice({
     email: "",
     isLoading: false,
     session: {},
+    sessionValid: false, // Session validity flag
   },
   reducers: {
     logout: (state) => {
@@ -100,6 +139,7 @@ export const authenticationReducer = createSlice({
         email: "",
         isLoading: false,
         session: {},
+        sessionValid: false, // Reset session validity flag
       };
     },
   },
@@ -115,16 +155,34 @@ export const authenticationReducer = createSlice({
       .addCase(authenticateUser.rejected, (state) => {
         state.isLoading = false;
       })
+      .addCase(extendSession.pending, (state) => {
+        state.isLoading = true;
+      }
+      )
+      .addCase(extendSession.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.session = action.payload;
+        state.sessionValid = isSessionValid(action.payload); // Set session validity
+      }
+      )
+      .addCase(extendSession.rejected, (state) => {
+        state.isLoading = false;
+        state.session = {};
+        state.sessionValid = false; // Reset session validity flag
+      }
+      )
       .addCase(getSession.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(getSession.fulfilled, (state, action) => {
         state.isLoading = false;
         state.session = action.payload;
+        state.sessionValid = isSessionValid(action.payload); // Set session validity
       })
       .addCase(getSession.rejected, (state) => {
         state.isLoading = false;
         state.session = {};
+        state.sessionValid = false; // Reset session validity flag
       });
   },
 });

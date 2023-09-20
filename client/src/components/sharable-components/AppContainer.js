@@ -8,8 +8,12 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-import { logout } from "../../redux/reducer/authenticationReducer";
+import { Fragment, useEffect, useState } from "react";
+import {
+  extendSession,
+  logout,
+} from "../../redux/reducer/authenticationReducer";
+import { open } from "../../redux/reducer/modalReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
@@ -27,41 +31,48 @@ function classNames(...classes) {
 }
 
 export default function AppContainer(props) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
 
-  const sessionValid = useSelector((state) => state.authentication.sessionValid);
-  // get isLoading from redux store
-  const isloading = useSelector((state) => state.authentication.isLoading);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { pathname } = useLocation();
+  const { sessionValid, session } = useSelector(
+    (state) => state.authentication
+  );
+
+  //Check time left before session expires in each second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (sessionValid) {
+        const timeLeft =
+          session.idToken.payload.exp - Math.floor(Date.now() / 1000);
+        console.log(timeLeft);
+        if (timeLeft <= 0) {
+          handleLogout();
+        }
+        if (timeLeft <= 30) {
+          dispatch(
+            open({
+              confiemButton: "Extend session",
+              title: "Session Expiration",
+              message: `Your session will expire in ${timeLeft} seconds. Do you want to extend your session?`,
+              action: () => dispatch(extendSession()),
+            })
+          );
+        }
+      }
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [sessionValid, session, dispatch, navigate]);
 
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
   };
 
-  if (!sessionValid && !isloading) {
-    // Redirect to the login page or show a message
-    // You can modify this part based on your application's behavior
-    return (
-      <div className="text-center mt-10">
-        <p className="text-red-600 font-semibold">
-          Session has expired. Please log in again.
-        </p>
-        <button
-          className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          onClick={() => navigate("/login")}
-        >
-          Log In
-        </button>
-      </div>
-    );
-  }
-
   return (
     <>
-      <Modal/>
+      <Modal />
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
