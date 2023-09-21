@@ -1,6 +1,8 @@
 import AppContainer from "../../sharable-components/AppContainer";
 import PdfSelector from "./components/PdfSelector";
+import { fetchPdfFiles } from "../../../redux/reducer/pdfReducer";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const stats = [
   { name: "Action Required", stat: "15" },
@@ -15,12 +17,12 @@ const mockPdfList = [
 ];
 
 export default function HomePage() {
-  const [pdfList, setPdfList] = useState([]);
+  const dispatch = useDispatch();
+  const { pdfList, isLoading, error } = useSelector(state => state.pdf);  // Replace 'pdf' with whatever you named your slice
 
   useEffect(() => {
-    // Simulate fetching PDFs from our backend
-    setPdfList(mockPdfList);
-  }, []);
+    dispatch(fetchPdfFiles());
+  }, [dispatch]);
 
   return (
     <AppContainer>
@@ -45,7 +47,17 @@ export default function HomePage() {
             ))}
           </dl>
         </div>
-        <PdfSelector pdfList={mockPdfList} />
+  
+        {/* Loading state */}
+        {isLoading && <p>Loading...</p>}
+  
+        {/* Error state */}
+        {error && <p className="error">{error}</p>}
+  
+        {/* PDF Selector */}
+        {!isLoading && !error && (
+          <PdfSelector pdfList={pdfList} />
+        )}
       </div>
     </AppContainer>
   );
