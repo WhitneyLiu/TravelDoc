@@ -8,11 +8,16 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-import { logout } from "../../redux/reducer/authenticationReducer";
-import { useDispatch } from "react-redux";
+import { Fragment, useEffect, useState } from "react";
+import {
+  extendSession,
+  logout,
+} from "../../redux/reducer/authenticationReducer";
+import { open } from "../../redux/reducer/modalReducer";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
+import Modal from "./Modal";
 
 const navigation = [
   { name: "Home", href: "/home", icon: HomeIcon },
@@ -26,23 +31,53 @@ function classNames(...classes) {
 }
 
 export default function AppContainer(props) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { pathname } = useLocation();
+  const { sessionValid, session } = useSelector(
+    (state) => state.authentication
+  );
+
+  //Check time left before session expires in each second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (sessionValid) {
+        const timeLeft =
+          session.idToken.payload.exp - Math.floor(Date.now() / 1000);
+        if (timeLeft <= 0) {
+          handleLogout();
+        }
+        if (timeLeft <= 30) {
+          dispatch(
+            open({
+              confiemButton: "Extend session",
+              title: "Session Expiration",
+              message: `Your session will expire in ${timeLeft} seconds. Do you want to extend your session?`,
+              action: () => dispatch(extendSession()),
+            })
+          );
+        }
+      }
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [sessionValid, session, dispatch, navigate]);
 
   const handleLogout = () => {
     dispatch(logout());
+    //clear all redux data stored in localStorage after logout
     navigate("/");
   };
 
   return (
     <>
+      <Modal />
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
-            className="relative z-50 lg:hidden"
+            className="relative z-40 lg:hidden"
             onClose={setSidebarOpen}
           >
             <Transition.Child
@@ -136,7 +171,7 @@ export default function AppContainer(props) {
         </Transition.Root>
 
         {/* Static sidebar for desktop */}
-        <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+        <div className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 border-r border-gray-200 bg-white px-6">
             <div className="flex h-16 shrink-0 items-center">
@@ -188,7 +223,7 @@ export default function AppContainer(props) {
           </div>
         </div>
 
-        <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+        <div className="sticky top-0 z-30 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6 lg:hidden">
           <button
             type="button"
             className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
