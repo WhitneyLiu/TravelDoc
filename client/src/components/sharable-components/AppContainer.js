@@ -46,7 +46,6 @@ export default function AppContainer(props) {
       if (sessionValid) {
         const timeLeft =
           session.idToken.payload.exp - Math.floor(Date.now() / 1000);
-        console.log(timeLeft);
         if (timeLeft <= 0) {
           handleLogout();
         }
@@ -67,6 +66,7 @@ export default function AppContainer(props) {
 
   const handleLogout = () => {
     dispatch(logout());
+    //clear all redux data stored in localStorage after logout
     navigate("/");
   };
 

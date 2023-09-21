@@ -4,9 +4,10 @@ import AuthFormContainer from "./components/AuthFormContainer";
 import AuthInput from "./components/AuthInput";
 import SubmitButton from "./components/SubmitButton";
 import { authenticateUser } from "../../../redux/reducer/authenticationReducer";
-import { useDispatch } from "react-redux";
+import { showError } from "../../../redux/reducer/notificationReducer";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
@@ -14,11 +15,23 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { sessionValid } = useSelector(
+    (state) => state.authentication
+  );
+
+  useEffect(() => {
+    if (sessionValid) {
+      navigate("/home");
+    }
+  }, [sessionValid, navigate]);
 
   const handleLogin = (event) => {
     event.preventDefault();
-    dispatch(authenticateUser({ email, password }));
-    navigate("/home");
+    try {
+      dispatch(authenticateUser({ email, password }));
+    } catch (error) {
+      dispatch(showError(error.message));
+    }
   };
 
   return (

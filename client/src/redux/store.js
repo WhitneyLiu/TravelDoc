@@ -6,7 +6,7 @@ import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 import { combineReducers } from 'redux';
 import { configureStore } from "@reduxjs/toolkit";
-import { persistReducer } from "redux-persist";
+import { persistReducer, persistStore } from "redux-persist";
 
 const reducers = combineReducers({
   authentication: authenticationReducer,
@@ -29,12 +29,6 @@ const store = configureStore({
   middleware: [thunk]
 });
 
-// // clear Persisted State after logout
-// store.subscribe(() => {
-//   if (!store.getState().authentication.isAuthenticated) {
-//     persistor.purge();
-//   }
-// });
-
+export const persistor = persistStore(store);
 
 export default store;

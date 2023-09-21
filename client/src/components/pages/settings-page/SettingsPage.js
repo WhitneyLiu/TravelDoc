@@ -1,6 +1,7 @@
 import AppContainer from "../../sharable-components/AppContainer";
+import { deleteAccount } from "../../../redux/reducer/authenticationReducer";
 import { open } from "../../../redux/reducer/modalReducer";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 export default function SettingsPage() {
@@ -14,13 +15,13 @@ export default function SettingsPage() {
         title: "Deactivate account",
         message:
           "Are you sure you want to deactivate your account? All of your data will be permanently removed from our servers forever. This action cannot be undone.",
-        action: deleteAccount,
+        action: deleteAccountConfirm,
       })
     );
   };
 
-  const deleteAccount = () => {
-    console.log("Account deleted");
+  const deleteAccountConfirm = () => {
+    dispatch(deleteAccount());
     navigate("/");
   };
 
