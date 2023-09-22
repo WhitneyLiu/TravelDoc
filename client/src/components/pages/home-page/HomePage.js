@@ -4,21 +4,9 @@ import { fetchPdfFiles } from "../../../redux/reducer/pdfReducer";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const stats = [
-  { name: "Action Required", stat: "15" },
-  { name: "Completed", stat: "120" },
-  { name: "Expiring", stat: "5" },
-];
-// Mock data for PDFs
-const mockPdfList = [
-  { name: "File1.pdf" },
-  { name: "File2.pdf" },
-  { name: "File3.pdf" },
-];
-
 export default function HomePage() {
   const dispatch = useDispatch();
-  const { pdfList, isLoading, error } = useSelector(state => state.pdf);  // Replace 'pdf' with whatever you named your slice
+  const { pdfList, isLoading, error } = useSelector((state) => state.pdf); // Replace 'pdf' with whatever you named your slice
   const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
@@ -28,6 +16,20 @@ export default function HomePage() {
       }
     });
   }, [dispatch, pdfList.length]);
+
+  const todoCount = pdfList.filter((item) => item.status === "todo").length;
+  const completedCount = pdfList.filter(
+    (item) => item.status === "completed"
+  ).length;
+  const expiringCount = pdfList.filter(
+    (item) => item.status === "expiring"
+  ).length;
+
+  const stats = [
+    { name: "Action Required", stat: todoCount },
+    { name: "Completed", stat: completedCount },
+    { name: "Expiring", stat: expiringCount },
+  ];
 
   return (
     <AppContainer>
@@ -52,16 +54,20 @@ export default function HomePage() {
             ))}
           </dl>
         </div>
-  
+
         {/* Loading state */}
         {isLoading && <p>Loading...</p>}
-  
+
         {/* Error state */}
         {error && <p className="error">{error}</p>}
-  
+
         {/* PDF Selector */}
         {!isLoading && !error && (
-          <PdfSelector pdfList={pdfList} isModalOpen={isModalOpen} setModalOpen={setModalOpen} />
+          <PdfSelector
+            pdfList={pdfList}
+            isModalOpen={isModalOpen}
+            setModalOpen={setModalOpen}
+          />
         )}
       </div>
     </AppContainer>
