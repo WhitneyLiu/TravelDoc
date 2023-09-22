@@ -19,10 +19,15 @@ const mockPdfList = [
 export default function HomePage() {
   const dispatch = useDispatch();
   const { pdfList, isLoading, error } = useSelector(state => state.pdf);  // Replace 'pdf' with whatever you named your slice
+  const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchPdfFiles());
-  }, [dispatch]);
+    dispatch(fetchPdfFiles()).then(() => {
+      if (pdfList.length > 0) {
+        setModalOpen(true); // Open the modal when files are fetched
+      }
+    });
+  }, [dispatch, pdfList.length]);
 
   return (
     <AppContainer>
@@ -56,7 +61,7 @@ export default function HomePage() {
   
         {/* PDF Selector */}
         {!isLoading && !error && (
-          <PdfSelector pdfList={pdfList} />
+          <PdfSelector pdfList={pdfList} isModalOpen={isModalOpen} setModalOpen={setModalOpen} />
         )}
       </div>
     </AppContainer>
