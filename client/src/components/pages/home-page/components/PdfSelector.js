@@ -3,7 +3,13 @@ import { DocumentIcon } from "@heroicons/react/24/outline";
 import PdfBoxModal from "./PdfBoxModal";
 import PdfBoxPagination from "./PdfBoxPagination";
 
-export default function PdfSelector({ pdfList, error, isLoading, isModalOpen, setModalOpen }) {
+export default function PdfSelector({
+  pdfList,
+  error,
+  isLoading,
+  isModalOpen,
+  setModalOpen,
+}) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
 
@@ -19,7 +25,11 @@ export default function PdfSelector({ pdfList, error, isLoading, isModalOpen, se
       ) : (
         <>
           {pdfList.length === 0 ? (
-            <p>No files available at the moment.</p>
+            <div className="relative block w-full h-[800px] rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-20">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p>No files available at the moment.</p>
+              </div>
+            </div>
           ) : (
             <>
               <div className="relative z-40">
@@ -31,7 +41,11 @@ export default function PdfSelector({ pdfList, error, isLoading, isModalOpen, se
                 <div className="relative block w-full h-[800px] rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-20">
                   <div className="flex flex-wrap justify-start items-start">
                     {currentItems.map((pdf, index) => (
-                      <div key={pdf.file_id || index} className="m-2" onDoubleClick={() => window.open(pdf.url, '_blank')}>
+                      <div
+                        key={pdf.file_id || index}
+                        className="m-2"
+                        onDoubleClick={() => window.open(pdf.url, "_blank")}
+                      >
                         <DocumentIcon
                           className="h-12 w-12 text-gray-400"
                           aria-hidden="true"

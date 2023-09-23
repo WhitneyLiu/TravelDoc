@@ -4,7 +4,7 @@ import PdfViewer from "./components/PdfViewer";
 import { useState } from "react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPdfFilesByStatus  } from "../../../redux/reducer/pdfReducer";
+import { fetchPdfFilesByStatus } from "../../../redux/reducer/pdfReducer";
 
 const mockPdfFiles = [
   { name: "Doc1", url: "#", timestamp: "2023/1/12" },
@@ -47,8 +47,6 @@ export default function DocumentsPage() {
         <div>Loading...</div>
       ) : error ? (
         <div>Error: {error}</div>
-        ) : (completedPdfList?.length ?? 0) === 0 ? (
-        <div>No completed files available at the moment.</div>
       ) : selectedPdf ? (
         <PdfViewer pdfUrl={selectedPdf} />
       ) : (
