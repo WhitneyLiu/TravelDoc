@@ -1,16 +1,16 @@
 import AppContainer from "../../sharable-components/AppContainer";
 import PdfSelector from "./components/PdfSelector";
-import { fetchPdfFiles } from "../../../redux/reducer/pdfReducer";
+import { fetchPdfFilesByStatus } from "../../../redux/reducer/pdfReducer";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function HomePage() {
   const dispatch = useDispatch();
-  const { pdfList, isLoading, error } = useSelector((state) => state.pdf); // Replace 'pdf' with whatever you named your slice
+  const { pdfList, isLoading, error } = useSelector((state) => state.pdf);
   const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchPdfFiles()).then(() => {
+    dispatch(fetchPdfFilesByStatus("todo")).then(() => {
       if (pdfList.length > 0) {
         setModalOpen(true); // Open the modal when files are fetched
       }
@@ -19,7 +19,7 @@ export default function HomePage() {
 
   const todoCount = pdfList.filter((item) => item.status === "todo").length;
   const completedCount = pdfList.filter(
-    (item) => item.status === "completed"
+    (item) => item.status === "complete"
   ).length;
   const expiringCount = pdfList.filter(
     (item) => item.status === "expiring"

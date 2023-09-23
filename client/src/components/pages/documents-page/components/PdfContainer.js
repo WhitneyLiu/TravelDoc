@@ -3,11 +3,16 @@ import { useState } from "react";
 import PdfBoxPagination from "../../home-page/components/PdfBoxPagination";
 import { DocumentIcon } from "@heroicons/react/24/outline";
 
-export default function PdfContainer({ pdfFiles, onPdfClick }) {
+export default function PdfContainer({
+  pdfFiles,
+  onPdfClick,
+  isLoading,
+  error,
+}) {
   const [isSorted, setIsSorted] = useState(false);
   const [completedFiles, setCompletedFiles] = useState(pdfFiles);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 1;
+  const itemsPerPage = 100;
   const totalPages = Math.ceil(completedFiles.length / itemsPerPage);
   const offset = (currentPage - 1) * itemsPerPage;
   const currentItems = completedFiles.slice(offset, offset + itemsPerPage);
@@ -24,6 +29,7 @@ export default function PdfContainer({ pdfFiles, onPdfClick }) {
     setCompletedFiles(pdfFiles);
     setIsSorted((s) => !s);
   }
+
   return (
     <div>
       <div>
@@ -36,22 +42,30 @@ export default function PdfContainer({ pdfFiles, onPdfClick }) {
           </Button>
         </div>
         <div className=" mt-5 flex flex-wrap justify-start items-start gap-6 w-full h-[800px] rounded-lg border-2 border-dashed border-gray-400 p-12 text-center">
-          {currentItems.map((pdf, index) => (
-            <div key={index} onClick={() => onPdfClick(pdf.url)}>
-              <div className="flex flex-col items-center cursor-pointer ">
-                <DocumentIcon
-                  className="h-12 w-12 text-gray-400"
-                  aria-hidden="true"
-                />
-                <span className="mt-2 text-sm font-semibold text-gray-900">
-                  {pdf.name}
-                </span>
-                <span className="text-sm font-semibold text-gray-900">
-                  {pdf.timestamp}
-                </span>
+          {isLoading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : currentItems.length === 0 ? (
+            <p>No completed files available.</p>
+          ) : (
+            currentItems.map((pdf, index) => (
+              <div key={index} onClick={() => onPdfClick(pdf.url)}>
+                <div className="flex flex-col items-center cursor-pointer ">
+                  <DocumentIcon
+                    className="h-12 w-12 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  <span className="mt-2 text-sm font-semibold text-gray-900">
+                    {pdf.name}
+                  </span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    {pdf.timestamp}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
       <PdfBoxPagination
