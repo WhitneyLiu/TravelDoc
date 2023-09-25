@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const fetchPdfFilesByStatus = createAsyncThunk(
   "pdf/fetchPdfFilesByStatus",
-  async (status, { getState, rejectWithValue }) => {
+  async (status = null, { getState, rejectWithValue }) => {
     const { session } = getState().authentication;
     const token = session.accessToken.jwtToken;
     try {
@@ -26,7 +26,9 @@ export const fetchPdfFilesByStatus = createAsyncThunk(
         status: item.file_status,
         url: item.file_url,
       }));
-      const filteredItems = transformedData.filter((item) => item.status === status);
+      const filteredItems = status
+        ? transformedData.filter((item) => item.status === status)
+        : transformedData;
       return filteredItems;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -38,7 +40,6 @@ export const pdfReducer = createSlice({
   name: "pdf",
   initialState: {
     pdfList: [],
-    completedPdfList: [],
     isLoading: false,
     error: null,
   },

@@ -3,12 +3,7 @@ import { useState } from "react";
 import PdfBoxPagination from "../../home-page/components/PdfBoxPagination";
 import { DocumentIcon } from "@heroicons/react/24/outline";
 
-export default function PdfContainer({
-  pdfFiles,
-  onPdfClick,
-  isLoading,
-  error,
-}) {
+export default function PdfContainer({ pdfFiles, isLoading }) {
   const [isSorted, setIsSorted] = useState(false);
   const [completedFiles, setCompletedFiles] = useState(pdfFiles);
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,22 +46,25 @@ export default function PdfContainer({
             </div>
           </div>
         ) : (
-          currentItems.map((pdf, index) => (
-            <div key={index} onClick={() => onPdfClick(pdf.url)}>
-              <div className="flex flex-col items-center cursor-pointer ">
-                <DocumentIcon
-                  className="h-12 w-12 text-gray-400"
-                  aria-hidden="true"
-                />
-                <span className="mt-2 text-sm font-semibold text-gray-900">
-                  {pdf.name}
-                </span>
-                <span className="text-sm font-semibold text-gray-900">
-                  {pdf.timestamp}
-                </span>
-              </div>
+          <div className="relative block w-full h-[800px] rounded-lg border-2 border-dashed border-gray-300 p-12 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-20">
+            <div className="flex flex-wrap justify-start items-start">
+              {currentItems.map((pdf, index) => (
+                <div
+                  key={pdf.file_id || index}
+                  className="m-2"
+                  onDoubleClick={() => window.open(pdf.url, "_blank")}
+                >
+                  <DocumentIcon
+                    className="h-12 w-12 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  <span className="mt-2 block text-sm font-semibold text-gray-900">
+                    {pdf.url ? pdf.url.split("/").pop() : "Unnamed File"}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))
+          </div>
         )}
       </div>
       <PdfBoxPagination

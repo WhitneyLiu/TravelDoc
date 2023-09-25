@@ -9,15 +9,17 @@ export default function HomePage() {
   const { pdfList, isLoading, error } = useSelector((state) => state.pdf);
   const [isModalOpen, setModalOpen] = useState(false);
 
+  const todoFiles = pdfList.filter((item) => item.status === "todo");
+
   useEffect(() => {
-    dispatch(fetchPdfFilesByStatus("todo")).then(() => {
-      if (pdfList.length > 0) {
-        setModalOpen(true); // Open the modal when files are fetched
+    dispatch(fetchPdfFilesByStatus()).then(() => {
+      if (todoFiles.length > 0) {
+        setModalOpen(true);
       }
     });
   }, [dispatch, pdfList.length]);
 
-  const todoCount = pdfList.filter((item) => item.status === "todo").length;
+  const todoCount = todoFiles.length;
   const completedCount = pdfList.filter(
     (item) => item.status === "complete"
   ).length;
@@ -64,7 +66,7 @@ export default function HomePage() {
         {/* PDF Selector */}
         {!isLoading && !error && (
           <PdfSelector
-            pdfList={pdfList}
+            pdfList={todoFiles}
             isModalOpen={isModalOpen}
             setModalOpen={setModalOpen}
           />
