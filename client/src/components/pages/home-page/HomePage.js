@@ -1,26 +1,37 @@
 import AppContainer from "../../sharable-components/AppContainer";
 import PdfSelector from "./components/PdfSelector";
+import { fetchPdfFilesByStatus } from "../../../redux/reducer/pdfReducer";
 import { useEffect, useState } from "react";
-
-const stats = [
-  { name: "Action Required", stat: "15" },
-  { name: "Completed", stat: "120" },
-  { name: "Expiring", stat: "5" },
-];
-// Mock data for PDFs
-const mockPdfList = [
-  { name: "File1.pdf" },
-  { name: "File2.pdf" },
-  { name: "File3.pdf" },
-];
+import { useDispatch, useSelector } from "react-redux";
 
 export default function HomePage() {
-  const [pdfList, setPdfList] = useState([]);
+  const dispatch = useDispatch();
+  const { pdfList, isLoading, error } = useSelector((state) => state.pdf);
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const todoFiles = pdfList.filter((item) => item.status === "todo");
 
   useEffect(() => {
-    // Simulate fetching PDFs from our backend
-    setPdfList(mockPdfList);
-  }, []);
+    dispatch(fetchPdfFilesByStatus()).then(() => {
+      if (todoFiles.length > 0) {
+        setModalOpen(true);
+      }
+    });
+  }, [dispatch, pdfList.length]);
+
+  const todoCount = todoFiles.length;
+  const completedCount = pdfList.filter(
+    (item) => item.status === "complete"
+  ).length;
+  const expiringCount = pdfList.filter(
+    (item) => item.status === "expiring"
+  ).length;
+
+  const stats = [
+    { name: "Action Required", stat: todoCount },
+    { name: "Completed", stat: completedCount },
+    { name: "Expiring", stat: expiringCount },
+  ];
 
   return (
     <AppContainer>
@@ -45,7 +56,21 @@ export default function HomePage() {
             ))}
           </dl>
         </div>
-        <PdfSelector pdfList={mockPdfList} />
+
+        {/* Loading state */}
+        {isLoading && <p>Loading...</p>}
+
+        {/* Error state */}
+        {error && <p className="error">{error}</p>}
+
+        {/* PDF Selector */}
+        {!isLoading && !error && (
+          <PdfSelector
+            pdfList={todoFiles}
+            isModalOpen={isModalOpen}
+            setModalOpen={setModalOpen}
+          />
+        )}
       </div>
     </AppContainer>
   );

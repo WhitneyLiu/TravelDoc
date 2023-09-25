@@ -2,26 +2,22 @@ import AppContainer from "../../sharable-components/AppContainer";
 import PdfContainer from "./components/PdfContainer";
 import PdfViewer from "./components/PdfViewer";
 import { useState } from "react";
-
-const mockPdfFiles = [
-  { name: "Doc1", url: "#", timestamp: "2023/1/12" },
-  { name: "Doc2", url: "#", timestamp: "2023/3/15" },
-  { name: "Doc3", url: "#", timestamp: "2023/5/20" },
-  { name: "Doc4", url: "#", timestamp: "2023/6/10" },
-  { name: "Doc5", url: "#", timestamp: "2023/7/26" },
-  { name: "Doc6", url: "#", timestamp: "2023/8/25" },
-  { name: "Doc7", url: "#", timestamp: "2023/8/26" },
-  { name: "Doc8", url: "#", timestamp: "2023/9/1" },
-  // add more pdf info
-];
-
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPdfFilesByStatus } from "../../../redux/reducer/pdfReducer";
 
 export default function DocumentsPage() {
   const [selectedPdf, setSelectedPdf] = useState(null);
-  const handlePdfClick = (pdfUrl) => {
-    setSelectedPdf(pdfUrl);
-  };
-  
+  const dispatch = useDispatch();
+  const { pdfList, isLoading, error } = useSelector((state) => state.pdf);
+
+  const completedFiles = pdfList.filter((item) => item.status === "complete");
+
+  useEffect(() => {
+    dispatch(fetchPdfFilesByStatus());
+  }, [dispatch]);
+
+
   return (
     <AppContainer>
       <div className="sm:px-0">
@@ -32,11 +28,15 @@ export default function DocumentsPage() {
           Here's all the docs you have signed
         </p>
       </div>
-        {selectedPdf ? (
-          <PdfViewer pdfUrl={selectedPdf} />
-        ) : (
-          <PdfContainer pdfFiles={mockPdfFiles} onPdfClick={handlePdfClick} />
-        )}
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>Error: {error}</div>
+      ) : selectedPdf ? (
+        <PdfViewer pdfUrl={selectedPdf} />
+      ) : (
+        <PdfContainer pdfFiles={completedFiles} />
+      )}
     </AppContainer>
   );
 }

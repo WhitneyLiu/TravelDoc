@@ -1,6 +1,7 @@
 import authenticationReducer from "./reducer/authenticationReducer";
 import notificationReducer from "./reducer/notificationReducer";
 import modalReducer from "./reducer/modalReducer";
+import pdfReducer from "./reducer/pdfReducer";
 import profileReducer from "./reducer/profileReducer";
 import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
@@ -13,6 +14,7 @@ const reducers = combineReducers({
   modal: modalReducer,
   notification: notificationReducer,   
   profile: profileReducer,  
+  pdf: pdfReducer, 
  });
 
 const persistConfig = {
