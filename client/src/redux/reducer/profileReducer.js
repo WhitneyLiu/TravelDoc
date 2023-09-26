@@ -1,88 +1,146 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
+export const updateProfileAPI = createAsyncThunk(
+  "profile/updateProfileAPI",
+  async (profileData, { getState, dispatch }) => {
+    const { session } = getState().authentication;
+    const token = session.accessToken.jwtToken;
+    const filteredProfileData = Object.fromEntries(
+      Object.entries(profileData).filter(([key, value]) => value !== undefined)
+    );
+    console.log("In updateProfileAPI, profileData:", filteredProfileData);
+    try {
+      const response = await fetch(
+        "https://1pnemqagth.execute-api.us-west-1.amazonaws.com/dev/user-profile",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify(filteredProfileData),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const transformedPayload = Object.keys(profileData).map((key) => ({
+          key,
+          value: profileData[key],
+        }));
+        transformedPayload.forEach((payload) => {
+          dispatch(updateProfile(payload)); // Update the local state
+        });
+        return data;
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "API call failed");
+      }
+    } catch (error) {
+      console.error("API call failed:", error);
+      throw error;
+    }
+  }
+);
 
 export const profileReducer = createSlice({
   name: "profile",
   initialState: {
     email: {
-        key: "email",
-        title: "Email Address",
-        value: "",
-        isEditable: false
+      key: "email",
+      title: "Email Address",
+      value: "",
+      isEditable: false,
     },
     firstName: {
-        key: "firstName",
-        title: "First Name",
-        value: "",
-        isEditable: true
+      key: "firstName",
+      title: "First Name",
+      value: "",
+      isEditable: true,
     },
     lastName: {
-        key: "lastName",
-        title: "Last Name",
-        value: "",
-        isEditable: true
+      key: "lastName",
+      title: "Last Name",
+      value: "",
+      isEditable: true,
     },
     birthday: {
-        key: "birthday",
-        title: "Birthday",
-        value: "",
-        isEditable: true
+      key: "birthday",
+      title: "Birthday",
+      value: "",
+      isEditable: true,
     },
     occupation: {
-        key: "occupation",
-        title: "Occupation",
-        value: "",
-        isEditable: true
+      key: "occupation",
+      title: "Occupation",
+      value: "",
+      isEditable: true,
     },
     phoneNumber: {
-        key: "phoneNumber",
-        title: "Phone Number",
-        value: "",
-        isEditable: true
+      key: "phoneNumber",
+      title: "Phone Number",
+      value: "",
+      isEditable: true,
     },
     emergencyContact: {
-        key: "emergencyContact",
-        title: "Emergency Contact",
-        value: "",
-        isEditable: true
+      key: "emergencyContact",
+      title: "Emergency Contact",
+      value: "",
+      isEditable: true,
     },
     country: {
-        key: "country",
-        title: "Country",
-        value: "",
-        isEditable: true
+      key: "country",
+      title: "Country",
+      value: "",
+      isEditable: true,
     },
     streetAddress: {
-        key: "streetAddress",
-        title: "Street address",
-        value: "",
-        isEditable: true
+      key: "streetAddress",
+      title: "Street address",
+      value: "",
+      isEditable: true,
     },
     city: {
-        key: "city",
-        title: "City",
-        value: "",
-        isEditable: true
+      key: "city",
+      title: "City",
+      value: "",
+      isEditable: true,
     },
     state: {
-        key: "state",
-        title: "State / Province",
-        value: "",
-        isEditable: true
+      key: "state",
+      title: "State / Province",
+      value: "",
+      isEditable: true,
     },
     zip: {
-        key: "zip",
-        title: "ZIP / Postal code",
-        value: "",
-        isEditable: true
+      key: "zip",
+      title: "ZIP / Postal code",
+      value: "",
+      isEditable: true,
     },
+    error: null,
   },
   reducers: {
     // I want an action that can update the state of the items in the profile by taking the key and value as parameters
     updateProfile: (state, action) => {
-        const { key, value } = action.payload;
-        // console.log(key, value);
+      console.log("Received action in updateProfile:", action);
+      const { key, value } = action.payload;
+      console.log(`Updating profile with key: ${key} and value: ${value}`);
+      if (state[key]) {
         state[key].value = value;
-    }
+      } else {
+        console.error(`Key ${key} not found in state`);
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(updateProfileAPI.fulfilled, (state, action) => {
+        state.error = null;
+      })
+      .addCase(updateProfileAPI.rejected, (state, action) => {
+        state.error = action.error.message;
+      });
   },
 });
 
