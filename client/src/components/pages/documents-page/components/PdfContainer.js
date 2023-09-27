@@ -14,7 +14,7 @@ export default function PdfContainer({ pdfFiles, isLoading }) {
 
   function SortByDate() {
     const sortedFiles = [...pdfFiles].sort(
-      (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+      (a, b) => new Date(a.expiry_date) - new Date(b.expiry_date)
     );
     setCompletedFiles(sortedFiles);
     setIsSorted((s) => !s);
@@ -51,7 +51,7 @@ export default function PdfContainer({ pdfFiles, isLoading }) {
               {currentItems.map((pdf, index) => (
                 <div
                   key={pdf.file_id || index}
-                  className="m-2"
+                  className="m-2 flex flex-col items-center"
                   onDoubleClick={() => window.open(pdf.url, "_blank")}
                 >
                   <DocumentIcon
@@ -61,6 +61,10 @@ export default function PdfContainer({ pdfFiles, isLoading }) {
                   <span className="mt-2 block text-sm font-semibold text-gray-900">
                     {pdf.url ? pdf.url.split("/").pop() : "Unnamed File"}
                   </span>
+                  <span className=" block text-sm font-semibold text-gray-900">
+                    {pdf.expiry_date}
+                  </span>
+                  
                 </div>
               ))}
             </div>

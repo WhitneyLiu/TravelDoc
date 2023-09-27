@@ -1,13 +1,10 @@
 import AppContainer from "../../sharable-components/AppContainer";
 import PdfContainer from "./components/PdfContainer";
-import PdfViewer from "./components/PdfViewer";
-import { useState } from "react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPdfFilesByStatus } from "../../../redux/reducer/pdfReducer";
 
 export default function DocumentsPage() {
-  const [selectedPdf, setSelectedPdf] = useState(null);
   const dispatch = useDispatch();
   const { pdfList, isLoading, error } = useSelector((state) => state.pdf);
 
@@ -32,9 +29,7 @@ export default function DocumentsPage() {
         <div>Loading...</div>
       ) : error ? (
         <div>Error: {error}</div>
-      ) : selectedPdf ? (
-        <PdfViewer pdfUrl={selectedPdf} />
-      ) : (
+      ) :(
         <PdfContainer pdfFiles={completedFiles} />
       )}
     </AppContainer>
