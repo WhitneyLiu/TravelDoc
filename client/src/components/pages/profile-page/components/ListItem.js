@@ -1,24 +1,48 @@
-import { updateProfile } from "../../../../redux/reducer/profileReducer";
+import {
+  updateProfile,
+  updateProfileAPI,
+} from "../../../../redux/reducer/profileReducer";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ListItem(props) {
-  const { key, title, value, isEditable } = props.profile;
+  useEffect(() => {
+    setInputValue(props.profile ? props.profile.value : "");
+  }, [props.profile]);
+
+  //console.log("ListItem props:", props);
+  // Move hooks to the top level
   const [isEditing, setIsEditing] = useState(false);
-  const [inputValue, setInputValue] = useState(value);
+  const [inputValue, setInputValue] = useState(
+    props.profile ? props.profile.value : ""
+  );
   const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    console.log(e.target.value);
-    setInputValue(e.target.value);
+  if (!props.profile) {
+    return null; // or return some fallback UI
   }
+
+  const { key, title, value, isEditable } = props.profile;
+
+  const handleChange = (e) => {
+    setInputValue(e.target.value);
+  };
 
   const handleSave = (e) => {
     setIsEditing(false);
-    console.log({ key: key, value: e.target.value });
-    dispatch(updateProfile({ key: key, value: inputValue }));
+    const profileData = {
+      [key]: inputValue,
+    };
+    //console.log("Payload before sending:", profileData);
+    dispatch(updateProfileAPI(profileData))
+      .then((response) => {
+        //console.log("In handleSave, key:", key, "inputValue:", inputValue);
+        dispatch(updateProfile({ key: key, value: inputValue }));
+      })
+      .catch((error) => {
+        //console.error("Failed to update profile:", error);
+      });
   };
-
   return (
     <div className="py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
       <dt className="text-sm font-medium leading-6 text-gray-900">{title}</dt>
