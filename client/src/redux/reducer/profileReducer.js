@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { logout } from "./authenticationReducer";
 
 export const updateProfileAPI = createAsyncThunk(
   "profile/updateProfileAPI",
@@ -191,6 +192,9 @@ export const profileReducer = createSlice({
       })
       .addCase(fetchProfileAPI.rejected, (state, action) => {
         state.error = action.error.message;
+      })
+      .addCase(logout, (state) => {  // Listen for the logout action
+        Object.assign(state, initialState);  // Reset the state
       });
   },
 });
