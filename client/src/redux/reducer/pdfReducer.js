@@ -25,6 +25,7 @@ export const fetchPdfFilesByStatus = createAsyncThunk(
         file_id: item.file_id,
         status: item.file_status,
         url: item.file_url,
+        expiry_date: item.expiry_date
       }));
       const filteredItems = status
         ? transformedData.filter((item) => item.status === status)
