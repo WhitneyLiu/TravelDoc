@@ -8,6 +8,9 @@ export default function ProfilePage() {
   //console.log("ProfilePage rendering");
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile);
+  //console.log("Original Profile:", profile);
+  const session = useSelector((state) => state.authentication.session);
+  const userEmail = session ? session.email : "";
 
   useEffect(() => {
     dispatch(fetchProfileAPI())
@@ -18,6 +21,22 @@ export default function ProfilePage() {
         console.error("Failed to fetch profile:", error);
       });
   }, [dispatch]);
+
+  // Merge email into profile object
+  const { user_email, ...restOfProfile } = profile;
+  const mergedProfile = {
+    user_email: {
+      key: "user_email",
+      title: "Email Address",
+      value: userEmail,
+      isEditable: false,
+    },
+    ...restOfProfile,
+  };
+
+  //console.log("Session:", session);
+  //console.log("User Email:", userEmail);
+  //console.log("Merged Profile:", mergedProfile);
 
   // Check for errors first
   if (profile.error) {
@@ -37,8 +56,8 @@ export default function ProfilePage() {
       </div>
       <div className="mt-6 border-t border-gray-100 overflow-auto">
         <dl className="divide-y divide-gray-100">
-          {Object.keys(profile).map((key) => (
-            <ListItem key={key} profile={profile[key]} />
+          {Object.keys(mergedProfile).map((key) => (
+            <ListItem key={key} profile={mergedProfile[key]} />
           ))}
         </dl>
       </div>
