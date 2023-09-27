@@ -3,9 +3,14 @@ import {
   updateProfileAPI,
 } from "../../../../redux/reducer/profileReducer";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ListItem(props) {
+  useEffect(() => {
+    setInputValue(props.profile ? props.profile.value : "");
+  }, [props.profile]);
+
+  //console.log("ListItem props:", props);
   // Move hooks to the top level
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(
@@ -28,14 +33,14 @@ export default function ListItem(props) {
     const profileData = {
       [key]: inputValue,
     };
-    console.log("Payload before sending:", profileData);
+    //console.log("Payload before sending:", profileData);
     dispatch(updateProfileAPI(profileData))
       .then((response) => {
-        console.log("In handleSave, key:", key, "inputValue:", inputValue);
+        //console.log("In handleSave, key:", key, "inputValue:", inputValue);
         dispatch(updateProfile({ key: key, value: inputValue }));
       })
       .catch((error) => {
-        console.error("Failed to update profile:", error);
+        //console.error("Failed to update profile:", error);
       });
   };
   return (
