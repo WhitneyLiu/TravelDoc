@@ -84,8 +84,8 @@ export const fetchProfileAPI = createAsyncThunk(
 );
 
 const initialState = {
-  email: {
-    key: "email",
+  user_email: {
+    key: "user_email",
     title: "Email Address",
     value: "",
     isEditable: false,
