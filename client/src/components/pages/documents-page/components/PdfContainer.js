@@ -7,7 +7,7 @@ export default function PdfContainer({ pdfFiles, isLoading, setIframeSrc1 }) {
 	const [isSorted, setIsSorted] = useState(false);
 	const [completedFiles, setCompletedFiles] = useState(pdfFiles);
 	const [currentPage, setCurrentPage] = useState(1);
-	const itemsPerPage = 100;
+	const itemsPerPage = 20;
 	const totalPages = Math.ceil(completedFiles.length / itemsPerPage);
 	const offset = (currentPage - 1) * itemsPerPage;
 	const currentItems = completedFiles.slice(offset, offset + itemsPerPage);
@@ -56,7 +56,7 @@ export default function PdfContainer({ pdfFiles, isLoading, setIframeSrc1 }) {
 							{currentItems.map((pdf, index) => (
 								<div
 									key={pdf.file_id || index}
-									className="m-2 flex flex-col items-center"
+									className="m-2  w-40 h-32 flex flex-col items-center justify-between"
 									onDoubleClick={() => setIframeSrc1(pdf.url)}
 									// onDoubleClick={() => window.open(pdf.url, "_blank")}
 								>
