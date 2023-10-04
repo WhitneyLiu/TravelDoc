@@ -56,7 +56,7 @@ export default function PdfContainer({ pdfFiles, isLoading, setIframeSrc1 }) {
 							{currentItems.map((pdf, index) => (
 								<div
 									key={pdf.file_id || index}
-									className="m-2  w-40 h-32 flex flex-col items-center justify-between"
+									className="m-3 w-40 flex flex-col items-center justify-between"
 									onDoubleClick={() => setIframeSrc1(pdf.url)}
 									// onDoubleClick={() => window.open(pdf.url, "_blank")}
 								>
@@ -64,14 +64,14 @@ export default function PdfContainer({ pdfFiles, isLoading, setIframeSrc1 }) {
 										className="h-12 w-12 text-gray-400"
 										aria-hidden="true"
 									/>
-									<span className="mt-2 block text-sm font-semibold text-gray-900">
+									<div className="mt-2 w-28 text-sm font-semibold text-gray-900 whitespace-normal break-normal text-center">
 										{pdf.url
 											? pdf.url.split("/").pop()
 											: "Unnamed File"}
-									</span>
-									<span className=" block text-sm font-semibold text-gray-900">
+									</div>
+									<div className=" block text-sm font-semibold text-gray-900">
 										{pdf.expiry_date}
-									</span>
+									</div>
 								</div>
 							))}
 						</div>
