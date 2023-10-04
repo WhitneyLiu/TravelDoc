@@ -1,17 +1,22 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import React from 'react';
+import React from "react";
 
-export default function PdfBoxPagination({ currentPage, setCurrentPage, totalPages, offset, currentItems, pdfList }) {
+export default function PdfBoxPagination({
+  currentPage,
+  setCurrentPage,
+  totalPages,
+  offset,
+  currentItems,
+  totalContractItems,
+}) {
   return (
     <div className="flex items-center justify-between border-t border-transparent bg-transparent px-4 py-3 sm:px-6">
       <div className="flex flex-1 items-center justify-between">
         <div>
           <p className="text-sm text-gray-700">
             Showing <span className="font-medium">{offset + 1}</span> to{" "}
-            <span className="font-medium">
-              {offset + currentItems.length}
-            </span>{" "}
-            of <span className="font-medium">{pdfList.length}</span> results
+            <span className="font-medium">{offset + currentItems.length}</span>{" "}
+            of <span className="font-medium">{totalContractItems}</span> results
           </p>
         </div>
         <div>

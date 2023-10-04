@@ -127,7 +127,7 @@ export default function PdfSelector({
 								totalPages={totalPages}
 								offset={offset}
 								currentItems={currentItems}
-								pdfList={pdfList}
+								totalContractItems={contractItems.length} 
 							/>
 						</>
 					)}

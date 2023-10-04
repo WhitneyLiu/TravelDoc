@@ -52,30 +52,7 @@ export default function SettingsPage() {
             Manage Your Completed Documents and Accounts Here.
           </p>
         </div>
-        <div className="border-t border-gray-100 mb-8"></div>
-        <div className="divide-y divide-white/5 mb-8">
-          <div className="grid max-w-7xl grid-cols-1 md:grid-cols-3">
-            <div>
-              <h2 className="text-base font-semibold leading-7 text-black">
-                Clear ALL signed documents
-              </h2>
-              <p className="mt-1 text-sm leading-6 text-gray-600">
-                Want to clear all signed documents? You can do so here. This
-                action is not reversible. All information related to this
-                account will be deleted permanently.
-              </p>
-            </div>
 
-            <div className="flex items-start justify-end md:col-span-2">
-              <button
-                className="bg-transparent hover:bg-red-600 text-red-600 font-semibold hover:text-white py-2 px-4 border border-red-600 hover:border-transparent rounded"
-                onClick={openClearDocumentsModal}
-              >
-                Yes, clear all signed documents
-              </button>
-            </div>
-          </div>
-        </div>
         <div className="border-t border-gray-100 mb-8"></div>
         <div className="divide-y divide-white/5">
           <div className="grid max-w-7xl grid-cols-1 md:grid-cols-3">
