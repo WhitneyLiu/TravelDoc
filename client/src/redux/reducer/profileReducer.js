@@ -61,11 +61,11 @@ export const fetchProfileAPI = createAsyncThunk(
         }
       );
       // Log headers
-      const headersObj = {};
-      response.headers.forEach((value, name) => {
-        headersObj[name] = value;
-      });
-      console.log("Headers:", headersObj);
+      //   const headersObj = {};
+      //   response.headers.forEach((value, name) => {
+      //     headersObj[name] = value;
+      //   });
+      // console.log("Headers:", headersObj);
 
       if (response.ok) {
         const data = await response.json();
