@@ -12,7 +12,7 @@ export const updateProfileAPI = createAsyncThunk(
     //console.log("In updateProfileAPI, profileData:", filteredProfileData);
     try {
       const response = await fetch(
-        "https://frwfi2fosa.execute-api.us-east-1.amazonaws.com/user-profile,",
+        "https://frwfi2fosa.execute-api.us-east-1.amazonaws.com/user-profile",
         {
           method: "PUT",
           headers: {
