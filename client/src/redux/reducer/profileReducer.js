@@ -69,14 +69,16 @@ export const fetchProfileAPI = createAsyncThunk(
 
       if (response.ok) {
         const data = await response.json();
-        const profileData = data.Items[0];
-        //console.log("Fetched profile data:", profileData);
-        if (Object.keys(profileData).length > 0) {
+        console.log("Full Response Data:", JSON.stringify(data, null, 2));
+        if (data.Items && data.Items.length > 0) {
+          const profileData = data.Items[0];
+          // Your existing code to update the profile
           Object.keys(profileData).forEach((key) => {
             dispatch(updateProfile({ key, value: profileData[key] }));
           });
         } else {
-          dispatch(resetProfile());
+          console.log("Items array is empty");
+          dispatch(resetProfile()); // Reset the profile if no data is returned
         }
         return data;
       } else {
