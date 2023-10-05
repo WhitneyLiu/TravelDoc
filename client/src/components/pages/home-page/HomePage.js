@@ -10,7 +10,8 @@ export default function HomePage() {
   const { pdfList, isLoading, error } = useSelector((state) => state.pdf);
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const todoFiles = pdfList.filter(
+  const todoFiles = pdfList.filter((item) => item.status === "todo");
+  const contractFiles = pdfList.filter(
     (item) => item.status === "todo" && !item.url.includes("Explanation")
   );
 
@@ -25,7 +26,7 @@ export default function HomePage() {
     });
   }, [dispatch, pdfList.length]);
 
-  const todoCount = todoFiles.length;
+  const todoCount = contractFiles.length;
   const completedCount = pdfList.filter(
     (item) => item.status === "complete"
   ).length;
