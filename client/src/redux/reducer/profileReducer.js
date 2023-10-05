@@ -12,7 +12,7 @@ export const updateProfileAPI = createAsyncThunk(
     //console.log("In updateProfileAPI, profileData:", filteredProfileData);
     try {
       const response = await fetch(
-        "https://1pnemqagth.execute-api.us-west-1.amazonaws.com/dev/user-profile",
+        "https://frwfi2fosa.execute-api.us-east-1.amazonaws.com/user-profile,",
         {
           method: "PUT",
           headers: {
@@ -22,7 +22,7 @@ export const updateProfileAPI = createAsyncThunk(
           body: JSON.stringify(filteredProfileData),
         }
       );
-
+      console.log(response);
       if (response.ok) {
         const data = await response.json();
         const transformedPayload = Object.keys(profileData).map((key) => ({
@@ -51,7 +51,7 @@ export const fetchProfileAPI = createAsyncThunk(
     const token = session.accessToken.jwtToken;
     try {
       const response = await fetch(
-        "https://1pnemqagth.execute-api.us-west-1.amazonaws.com/dev/user-profile",
+        "https://frwfi2fosa.execute-api.us-east-1.amazonaws.com/user-profile",
         {
           method: "GET",
           headers: {
@@ -193,8 +193,9 @@ export const profileReducer = createSlice({
       .addCase(fetchProfileAPI.rejected, (state, action) => {
         state.error = action.error.message;
       })
-      .addCase(logout, (state) => {  // Listen for the logout action
-        Object.assign(state, initialState);  // Reset the state
+      .addCase(logout, (state) => {
+        // Listen for the logout action
+        Object.assign(state, initialState); // Reset the state
       });
   },
 });
