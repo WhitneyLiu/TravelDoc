@@ -6,10 +6,7 @@ export const updateProfileAPI = createAsyncThunk(
   async (profileData, { getState, dispatch }) => {
     const { session } = getState().authentication;
     const token = session.accessToken.jwtToken;
-    const filteredProfileData = Object.fromEntries(
-      Object.entries(profileData).filter(([key, value]) => value !== undefined)
-    );
-    //console.log("In updateProfileAPI, profileData:", filteredProfileData);
+    console.log("In updateProfileAPI, profileData:", profileData);
     try {
       const response = await fetch(
         "https://frwfi2fosa.execute-api.us-east-1.amazonaws.com/dev/user-profile",
@@ -17,12 +14,12 @@ export const updateProfileAPI = createAsyncThunk(
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: token,
+            "authorization": token,
           },
-          body: JSON.stringify(filteredProfileData),
+          body: JSON.stringify(profileData),
         }
       );
-      console.log(response);
+
       if (response.ok) {
         const data = await response.json();
         const transformedPayload = Object.keys(profileData).map((key) => ({
@@ -56,7 +53,7 @@ export const fetchProfileAPI = createAsyncThunk(
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: token,
+            "authorization": token,
           },
         }
       );
@@ -69,9 +66,10 @@ export const fetchProfileAPI = createAsyncThunk(
 
       if (response.ok) {
         const data = await response.json();
-        const profileData = data.Items[0];
-        //console.log("Fetched profile data:", profileData);
-        if (Object.keys(profileData).length > 0) {
+        console.log(data);
+        const profileData = data.data.Items[0];
+        console.log("Fetched profile data:", profileData);
+        if (profileData) {
           Object.keys(profileData).forEach((key) => {
             dispatch(updateProfile({ key, value: profileData[key] }));
           });
