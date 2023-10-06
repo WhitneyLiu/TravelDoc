@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { DocumentIcon } from "@heroicons/react/24/outline";
 import PdfBoxModal from "./PdfBoxModal";
 import PdfBoxPagination from "./PdfBoxPagination";
+import  Dropdown  from "./Dropdown";
 
 export default function PdfSelector({
 	pdfList,
@@ -108,6 +109,7 @@ export default function PdfSelector({
 													className="h-12 w-12 text-gray-400"
 													aria-hidden="true"
 												/>
+												
 												<div className="mt-2 w-28 text-sm font-semibold text-gray-900 whitespace-normal break-normal text-center">
 													{pdf.url
 														? pdf.url
@@ -115,6 +117,7 @@ export default function PdfSelector({
 																.pop()
 														: "Unnamed File"}
 												</div>
+												<Dropdown pdf={pdf} setIframeSrc1={setIframeSrc1} setIframeSrc2={setIframeSrc2}/>
 											</div>
 										))}
 									</div>
