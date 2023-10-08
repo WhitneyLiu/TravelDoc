@@ -2,13 +2,17 @@ import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
-export default function Example({pdf, pdfList, setIframeSrc1, setIframeSrc2}) {
-  function handleView({pdf, pdfList, setIframeSrc1, setIframeSrc2}) {
+export default function Example({
+  pdf,
+  pdfList,
+  setIframeSrc1,
+  setIframeSrc2,
+}) {
+  function handleView({ pdf, pdfList, setIframeSrc1, setIframeSrc2 }) {
     if (!pdf || !pdf.url) {
       console.error("Invalid PDF or URL");
       return;
     }
-    //console.log("PDF List:", pdfList);
 
     // Set the URL for the left iframe to the selected PDF
     setIframeSrc1(pdf.url);
@@ -17,10 +21,9 @@ export default function Example({pdf, pdfList, setIframeSrc1, setIframeSrc2}) {
     const urlParts = pdf.url.split("/");
     const fileName = urlParts[urlParts.length - 1];
     const baseName = fileName.split("-")[0];
-    //console.log("Base name:", baseName);
 
     // Find the corresponding 'Explanation' PDF
-    const explanationPdf = pdfList?.find(
+    const explanationPdf = pdfList.find(
       (item) => item && item.url && item.url.includes(`${baseName}Explanation`)
     );
 
@@ -29,7 +32,6 @@ export default function Example({pdf, pdfList, setIframeSrc1, setIframeSrc2}) {
       setIframeSrc2(explanationPdf.url);
     } else {
       console.warn("Explanation PDF not found");
-      // If not found, set it to some default or leave it empty
       setIframeSrc2("");
     }
   }
@@ -85,7 +87,9 @@ export default function Example({pdf, pdfList, setIframeSrc1, setIframeSrc2}) {
                     className={`${
                       active ? "bg-violet-500 text-white" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                    onClick={() => handleView({pdf, pdfList, setIframeSrc1, setIframeSrc2})}
+                    onClick={() =>
+                      handleView({ pdf, pdfList, setIframeSrc1, setIframeSrc2 })
+                    }
                   >
                     {active ? (
                       <MoveActiveIcon
