@@ -8,7 +8,7 @@ export default function ProfilePage() {
   //console.log("ProfilePage rendering");
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile);
-  console.log("Original Profile:", profile);
+  //console.log("Original Profile:", profile);
   const session = useSelector((state) => state.authentication.session);
   const userEmail = session ? session.email : "";
 
