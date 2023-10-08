@@ -66,9 +66,10 @@ export const fetchProfileAPI = createAsyncThunk(
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Full Response Data:", JSON.stringify(data, null, 2));
-        if (data.Items && data.Items.length > 0) {
-          const profileData = data.Items[0];
+        console.log(data);
+        const profileData = data.data.Items[0];
+        console.log("Fetched profile data:", profileData);
+        if (profileData) {
           Object.keys(profileData).forEach((key) => {
             dispatch(updateProfile({ key, value: profileData[key] }));
           });
