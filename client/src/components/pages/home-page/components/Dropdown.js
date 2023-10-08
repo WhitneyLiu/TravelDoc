@@ -1,6 +1,16 @@
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import HelloSign from "hellosign-embedded";
+
+const client = new HelloSign();
+
+const openSignatureRequest = (signUrl, clientId) => {
+  client.open(signUrl, {
+    clientId: clientId,
+    skipDomainVerification: true,
+  });
+};
 
 export default function Example({
   pdf,
@@ -8,6 +18,16 @@ export default function Example({
   setIframeSrc1,
   setIframeSrc2,
 }) {
+  const [signUrl, setSignUrl] = useState(null);
+
+  useEffect(() => {
+    // Fetch the sign_url from your server when the component mounts
+    fetch("http://your-server.com/api/getSignUrl") // Replace with your actual server API endpoint
+      .then((res) => res.json())
+      .then((data) => setSignUrl(data.signUrl))
+      .catch((err) => console.error("Failed to fetch sign_url:", err));
+  }, []);
+
   function handleView({ pdf, pdfList, setIframeSrc1, setIframeSrc2 }) {
     if (!pdf || !pdf.url) {
       console.error("Invalid PDF or URL");
@@ -65,6 +85,13 @@ export default function Example({
                     className={`${
                       active ? "bg-violet-500 text-white" : "text-gray-900"
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    onClick={() => {
+                      if (signUrl) {
+                        openSignatureRequest(signUrl, '963b73b69f7f935260e11119fc3329c9'); // Use the fetched signUrl
+                      } else {
+                        console.warn('Sign URL not available');
+                      }
+                    }}
                   >
                     {active ? (
                       <EditActiveIcon
