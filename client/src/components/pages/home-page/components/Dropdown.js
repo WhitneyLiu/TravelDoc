@@ -22,8 +22,9 @@ export default function Example({
 
   useEffect(() => {
     // Fetch the sign_url from your server when the component mounts
-    fetch("http://your-server.com/api/getSignUrl") // Replace with your actual server API endpoint
-      .then((res) => res.json())
+    fetch(
+      "https://frwfi2fosa.execute-api.us-east-1.amazonaws.com/dev/dropbox-sign"
+    )
       .then((data) => setSignUrl(data.signUrl))
       .catch((err) => console.error("Failed to fetch sign_url:", err));
   }, []);
@@ -87,9 +88,12 @@ export default function Example({
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                     onClick={() => {
                       if (signUrl) {
-                        openSignatureRequest(signUrl, '963b73b69f7f935260e11119fc3329c9'); // Use the fetched signUrl
+                        openSignatureRequest(
+                          signUrl,
+                          "04024c77ff759c89d0ac84882057ab29"
+                        );
                       } else {
-                        console.warn('Sign URL not available');
+                        console.warn("Sign URL not available");
                       }
                     }}
                   >
